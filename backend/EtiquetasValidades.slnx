@@ -1,2 +1,6 @@
 <Solution>
+  <Project Path="Etiquetas.Api/Etiquetas.Api.csproj" Id="67a2de86-486b-4cc5-b728-2f7e3db8dece" />
+  <Project Path="Etiquetas.Application/Etiquetas.Application.csproj" Id="b1ca8ca9-6ea2-46db-b62d-290576744a86" />
+  <Project Path="Etiquetas.Domain/Etiquetas.Domain.csproj" Id="fc25d9f7-255c-4885-aa11-9ba4915c9531" />
+  <Project Path="Etiquetas.Infrastructure/Etiquetas.Infrastructure.csproj" Id="ec8c93c8-667e-457f-8427-afb17f8aad2d" />
 </Solution>

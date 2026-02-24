@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace backend.Etiquetas.Domain.Entities
+namespace Etiquetas.Domain.Entities
 {
     public class Produto
     {
@@ -13,6 +13,6 @@ namespace backend.Etiquetas.Domain.Entities
 
         public int DiasValidade { get; set; }
 
-        public int EmpresaId { get; set; }
+        public Empresa Empresa { get; set; }
     }
 }
