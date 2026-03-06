@@ -1,0 +1,12 @@
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\bin\Debug\net10.0\Etiquetas.Domain.deps.json
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\bin\Debug\net10.0\Etiquetas.Domain.dll
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\bin\Debug\net10.0\Etiquetas.Domain.pdb
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\Etiquetas.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\Etiquetas.Domain.AssemblyInfoInputs.cache
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\Etiquetas.Domain.AssemblyInfo.cs
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\Etiquetas.Domain.csproj.CoreCompileInputs.cache
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\Etiquetas.Domain.sourcelink.json
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\Etiquetas.Domain.dll
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\refint\Etiquetas.Domain.dll
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\Etiquetas.Domain.pdb
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Domain\obj\Debug\net10.0\ref\Etiquetas.Domain.dll

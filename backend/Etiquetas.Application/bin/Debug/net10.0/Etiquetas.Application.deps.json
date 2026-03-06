@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Etiquetas.Application/1.0.0": {
+        "dependencies": {
+          "Etiquetas.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Etiquetas.Application.dll": {}
+        }
+      },
+      "Etiquetas.Domain/1.0.0": {
+        "runtime": {
+          "Etiquetas.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Etiquetas.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Etiquetas.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
