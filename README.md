@@ -1,58 +1,90 @@
-Projeto: Sistema de Etiquetas de Validade
-Objetivo do Projeto
-Desenvolver um software capaz de cadastrar produtos e imprimir etiquetas de validade em impressoras
-térmicas. O sistema calcula automaticamente a data de validade com base na data de fabricação e na
-validade padrão cadastrada para cada produto. O projeto também servirá como portfólio profissional de
-desenvolvimento backend.
-Tecnologias Utilizadas
-• Backend: C#
-• Framework: .NET / ASP.NET Core
-• ORM: Entity Framework Core
-• Banco de dados: SQL Server
-• Arquitetura: Clean Architecture
-• API REST para comunicação com frontend
-• Frontend planejado: Angular
-• Ferramentas: Visual Studio Code, Visual Studio, CLI do .NET
-Arquitetura do Projeto
-O projeto foi estruturado utilizando princípios de Clean Architecture, separando responsabilidades em
-diferentes camadas.
-• Etiquetas.Domain → contém as entidades principais do sistema
-• Etiquetas.Application → conterá regras de negócio e serviços
-• Etiquetas.Infrastructure → acesso ao banco de dados e Entity Framework
-• Etiquetas.Api → camada de entrada da aplicação (API REST)
-Modelagem das Entidades
-• Empresa → representa o cliente que utiliza o sistema.
-• Usuario → usuário que pertence a uma empresa.
-• Produto → produto cadastrado contendo nome e dias de validade.
-• Producao → representa a fabricação de um produto e gera as etiquetas.
-Regra de Negócio Principal
-A regra central do sistema é calcular automaticamente a data de validade de um produto a partir da data
-de fabricação e dos dias de validade cadastrados no produto.
-Exemplo lógico:
-• Selecionar produto cadastrado (ex: Parmegiana de Carne)
-• Obter dias de validade cadastrados (ex: 3 dias)
-• Informar data de fabricação
-• Calcular data de validade automaticamente
-• Gerar etiquetas com essas informações
-Configuração do Banco de Dados
-• Instalação do Entity Framework Core
-• Criação da classe DbContext
-• Registro do DbContext no Program.cs da API
-• Configuração da connection string no appsettings.json
-• Criação da migration inicial usando CLI do .NET
-• Execução do comando para criar o banco automaticamente
-Comandos Importantes Utilizados
-• dotnet ef migrations add InitialCreate
-• dotnet ef database update --project Etiquetas.Infrastructure --startup-project Etiquetas.Api
-Resultado Obtido
-• Banco de dados 'EtiquetasDB' criado automaticamente
-• Tabelas criadas: Empresas, Usuarios, Produtos, Producoes
-• Relacionamentos entre tabelas definidos via Entity Framework
-• Estrutura inicial do backend funcional
-Próximos Passos do Projeto
-• Criar Repositories para acesso ao banco
-• Criar Services contendo regras de negócio
-• Criar Controllers da API
-• Testar endpoints usando Swagger
-• Desenvolver frontend em Angular
-• Implementar geração e impressão de etiquetas
+# 🏷️ Sistema de Etiquetas de Validade
+
+> **Sistema automatizado para cadastro de produtos e emissão de etiquetas de validade em impressoras térmicas.**
+
+Um projeto full-stack focado na otimização de processos do setor alimentício. O sistema calcula automaticamente as datas de validade com base na data de fabricação e nas regras de cada produto, garantindo segurança sanitária e agilidade na cozinha. 
+
+Desenvolvido como parte do meu portfólio profissional de desenvolvimento backend, o projeto adota as melhores práticas de **Clean Architecture** e desenvolvimento em **C# / .NET**.
+
+---
+
+## 🎯 Objetivo do Projeto
+
+Desenvolver um software capaz de:
+- Cadastrar e gerenciar produtos e suas respectivas validades padrão.
+- Calcular automaticamente a data de vencimento a partir da data de fabricação.
+- Integrar-se com impressoras térmicas para emissão ágil de etiquetas.
+- Servir como uma base sólida e escalável de backend, com uma API REST pronta para consumo pelo frontend.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+**Backend & Arquitetura**
+- **Linguagem:** C#
+- **Framework:** .NET / ASP.NET Core
+- **Arquitetura:** Clean Architecture
+- **API:** RESTful API
+
+**Banco de Dados & ORM**
+- **Banco de Dados:** SQL Server
+- **ORM:** Entity Framework (EF) Core
+
+**Frontend (Planejado)**
+- **Framework:** Angular
+
+**Ferramentas de Desenvolvimento**
+- Visual Studio / Visual Studio Code
+- CLI do .NET
+- Swagger (Testes de API)
+
+---
+
+## 🏗️ Arquitetura do Projeto
+
+O sistema foi desenhado sob os princípios da **Clean Architecture**, garantindo baixo acoplamento e alta coesão através da separação clara de responsabilidades:
+
+
+
+- `Etiquetas.Domain`: Coração do sistema, contendo as entidades principais e regras de negócio puras.
+- `Etiquetas.Application`: Orquestração do sistema, contendo serviços e casos de uso (Use Cases).
+- `Etiquetas.Infrastructure`: Camada de detalhes técnicos, responsável pelo acesso ao banco de dados (EF Core) e integrações externas.
+- `Etiquetas.Api`: Camada de apresentação e entrada da aplicação, expondo os endpoints via API REST.
+
+---
+
+## 📦 Modelagem de Entidades
+
+A estrutura de dados foi pensada para atender múltiplos clientes (SaaS) com rastreabilidade:
+
+- **Empresa:** Representa o cliente que contrata e utiliza o sistema.
+- **Usuario:** Funcionário vinculado a uma `Empresa` específica, responsável pelas operações.
+- **Produto:** Item cadastrado com seu respectivo tempo de vida útil (dias de validade).
+- **Producao:** Registro de um lote fabricado, que gera as etiquetas finais com as datas calculadas.
+
+---
+
+## 🧠 Regra de Negócio Principal
+
+O core lógico do sistema reside no cálculo seguro da validade sanitária. 
+
+**Exemplo Prático:**
+1. O usuário seleciona um produto cadastrado *(ex: Parmegiana de Carne)*.
+2. O sistema recupera a validade padrão *(ex: 3 dias)*.
+3. O usuário informa a data e hora de fabricação.
+4. O backend **calcula automaticamente** a data e hora exatas de descarte.
+5. O sistema gera a matriz de dados para a impressão da etiqueta térmica.
+
+---
+
+## ⚙️ Configuração e Execução
+
+### Pré-requisitos
+- SDK do .NET 8 (ou superior)
+- SQL Server rodando localmente ou em container Docker
+
+### Passos para rodar a API
+
+1. Clone o repositório:
+   ```bash
+   git clone [https://github.com/SeuUsuario/sistema-etiquetas.git](https://github.com/SeuUsuario/sistema-etiquetas.git)
