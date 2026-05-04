@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
 using Etiquetas.Infrastructure.Data;
 
 namespace Etiquetas.Infrastructure.Repositories
 {
-    public class ProdutoRepository
+    public class ProdutoRepository : IProdutoRepository
     {
         private readonly EtiquetaDbContext _context;
 
@@ -31,6 +32,5 @@ namespace Etiquetas.Infrastructure.Repositories
         {
             return _context.Produtos.ToList();
         }
-    
     }
 }

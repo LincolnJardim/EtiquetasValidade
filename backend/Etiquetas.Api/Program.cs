@@ -2,6 +2,7 @@ using Etiquetas.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Etiquetas.Infrastructure.Repositories;
 using Etiquetas.Application.Services;
+using Etiquetas.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ProdutoRepository>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<ProdutoService>();
 
 
