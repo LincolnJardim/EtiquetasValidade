@@ -37,5 +37,12 @@ namespace Etiquetas.Api.Controllers
 
             return Ok(produto);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult AtualizarProduto(int id, Produto produto)
+        {
+            var produtoAtualizado = _service.AtualizarProduto(id, produto);
+            return Ok(produtoAtualizado);
+        }
     }
 }

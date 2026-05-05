@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
 
+
+
 namespace Etiquetas.Application.Services
 {
     public class ProdutoService
@@ -37,6 +39,21 @@ namespace Etiquetas.Application.Services
         public List<Produto> ListarTodos()
         {
             return _repository.ListarTodos();
+        }
+
+        public Produto AtualizarProduto(int id, Produto produto)
+        {
+            var produtoBanco = _repository.ObterPorId(id);
+
+            if (produtoBanco == null)
+                throw new Exception("Produto não encontrado");
+            
+            produtoBanco.Nome = produto.Nome;
+            produtoBanco.DiasValidade = produto.DiasValidade;
+
+            _repository.AtualizarProduto(produtoBanco);
+
+            return produtoBanco;
         }
     }
 }

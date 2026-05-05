@@ -32,5 +32,11 @@ namespace Etiquetas.Infrastructure.Repositories
         {
             return _context.Produtos.ToList();
         }
+
+        public void AtualizarProduto(Produto produto)
+        {
+            _context.Produtos.Update(produto);
+            _context.SaveChanges();
+        }
     }
 }

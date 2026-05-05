@@ -11,5 +11,8 @@ namespace Etiquetas.Application.Interfaces
         void Adicionar(Produto produto);
         Produto? ObterPorId(int id);
         List<Produto> ListarTodos();
+
+        void AtualizarProduto(Produto produto);
+        
     }
 }
