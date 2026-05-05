@@ -21,10 +21,11 @@ namespace Etiquetas.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CriarProducao(Producao producao)
+        [HttpPost]
+        public IActionResult CriarProducao(int produtoId, DateTime dataFabricacao, int quantidade)
         {
-            var novaProducao = _service.CriarProducao(producao);
-            return Ok(novaProducao);
+            var producao = _service.CriarProducao(produtoId, dataFabricacao, quantidade);
+            return Ok(producao);
         }
 
         [HttpGet("{id}")]

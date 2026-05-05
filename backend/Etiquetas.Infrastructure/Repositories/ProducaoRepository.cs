@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
 using Etiquetas.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Etiquetas.Infrastructure.Repositories
 {
@@ -24,13 +25,16 @@ namespace Etiquetas.Infrastructure.Repositories
 
         public List<Producao> ListarProducoes()
         {
-            return _context.Producoes.ToList();
-            
+            return _context.Producoes
+                .Include(p => p.Produto)
+                .ToList();
         }
 
         public Producao? ObterProducaoPorId(int id)
         {
-            return _context.Producoes.Find(id);
+            return _context.Producoes
+                .Include(p => p.Produto)
+                .FirstOrDefault(p => p.Id == id);
         }
     }
 }

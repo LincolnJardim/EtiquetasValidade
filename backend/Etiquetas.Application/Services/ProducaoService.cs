@@ -21,22 +21,34 @@ namespace Etiquetas.Application.Services
             _produtoRepository = produtoRepository;
         }
 
-        public Producao CriarProducao(Producao producao)
+        public Producao CriarProducao(int produtoId, DateTime dataFabricacao, int quantidade)
         {
-            if (producao.DataFabricacao > DateTime.Now)
+
+            
+            if (dataFabricacao > DateTime.Now)
                 throw new Exception("Data de fabricação não pode ser no futuro");
             
-            if (producao.DataFabricacao < DateTime.Now.AddYears(-1))
+            if (dataFabricacao < DateTime.Now.AddYears(-1))
                 throw new Exception("Data de fabricação muito antiga");
 
-            if (producao.DataFabricacao == default)
+            if (dataFabricacao == default)
                 throw new Exception("Data de fabricação inválida");
             
-            var produto = _produtoRepository.ObterPorId(producao.Produto.Id);
+            var produto = _produtoRepository.ObterPorId(produtoId);
 
             if (produto == null)
                 throw new Exception("Produto não encontrado");
             
+            if (quantidade <= 0)
+                throw new Exception("Quantidade inválida");
+            
+            var producao = new Producao
+            {
+                Produto = produto,
+                DataFabricacao = dataFabricacao,
+                QuantidadeEtiquetas = quantidade
+            };
+
             producao.CalcularValidade();
             
             _repository.AdicionarProducao(producao);
