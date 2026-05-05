@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Etiquetas.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e01d22a3f94d48b01c27b5704acdb73dd44481b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+54047b9e834e5c53e2e33d61caa5d55597b8df07")]
 [assembly: System.Reflection.AssemblyProductAttribute("Etiquetas.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Etiquetas.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

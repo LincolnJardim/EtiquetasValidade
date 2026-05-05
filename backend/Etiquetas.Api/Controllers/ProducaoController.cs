@@ -11,31 +11,31 @@ namespace Etiquetas.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProdutoController : ControllerBase
+    public class ProducaoController : ControllerBase
     {
-        private readonly ProdutoService _service;
+        private readonly ProducaoService _service;
 
-        public ProdutoController(ProdutoService service)
+        public ProducaoController(ProducaoService service)
         {
             _service = service;
         }
 
         [HttpPost]
-        public IActionResult Criar(Produto produto)
+        public IActionResult CriarProducao(Producao producao)
         {
-            var novoProduto = _service.CriarProduto(produto);
-            return Ok(novoProduto);
+            var novaProducao = _service.CriarProducao(producao);
+            return Ok(novaProducao);
         }
 
         [HttpGet("{id}")]
-        public IActionResult ObterPorId(int id)
+        public IActionResult ObterProducaoPorId(int id)
         {
-            var produto = _service.ObterPorId(id);
+            var producao = _service.ObterProduçoesPorId(id);
 
-            if (produto == null)
+            if (producao == null)
                 return NotFound();
 
-            return Ok(produto);
+            return Ok(producao);
         }
     }
 }

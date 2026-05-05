@@ -15,7 +15,7 @@ namespace Etiquetas.Domain.Entities
 
         public string Senha { get; set; }
 
-        public int EmpresaId { get; set; }
+        
 
         
     }

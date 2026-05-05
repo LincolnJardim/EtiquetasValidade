@@ -13,6 +13,5 @@ namespace Etiquetas.Domain.Entities
 
         public int DiasValidade { get; set; }
 
-        public Empresa Empresa { get; set; }
     }
 }

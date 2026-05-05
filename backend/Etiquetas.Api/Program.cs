@@ -12,8 +12,13 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Produto
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<ProdutoService>();
+
+//Produção
+builder.Services.AddScoped<IProducaoRepository, ProducaoRepository>();
+builder.Services.AddScoped<ProducaoService>();
 
 
 builder.Services.AddDbContext<EtiquetaDbContext>(options =>

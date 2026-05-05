@@ -17,9 +17,9 @@ namespace Etiquetas.Domain.Entities
 
         public int QuantidadeEtiquetas { get; set; }
 
-        public void CalcularValidade(Produto Produto, DateTime DataFabricação)
+        public void CalcularValidade()
         {
-            DataValidade = DataFabricação.AddDays(Produto.DiasValidade);
+            DataValidade = DataFabricacao.AddDays(Produto.DiasValidade);
         }
     }
 }
