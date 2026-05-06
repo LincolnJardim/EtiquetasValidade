@@ -55,5 +55,17 @@ namespace Etiquetas.Application.Services
 
             return produtoBanco;
         }
+
+        public Produto DeletarProduto(int id)
+        {
+            var produtoBanco = _repository.ObterPorId(id);
+
+            if (produtoBanco == null)
+                throw new Exception("Produto não encontrado");
+            
+            _repository.DeletarProduto(produtoBanco);
+
+            return produtoBanco;
+        }
     }
 }

@@ -38,5 +38,11 @@ namespace Etiquetas.Infrastructure.Repositories
             _context.Produtos.Update(produto);
             _context.SaveChanges();
         }
+
+        public void DeletarProduto(Produto produto)
+        {
+            _context.Produtos.Remove(produto);
+            _context.SaveChanges();
+        }
     }
 }

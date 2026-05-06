@@ -65,5 +65,34 @@ namespace Etiquetas.Application.Services
         {
             return _repository.ListarProducoes();
         }
+
+        public Producao AtualizarProducao(int id, Producao producao)
+        {
+            var producaoBanco = _repository.ObterProducaoPorId(id);
+
+            if (producaoBanco == null)
+                throw new Exception("Produção não encontrado");
+            
+            producaoBanco.DataFabricacao = producao.DataFabricacao;
+            producaoBanco.QuantidadeEtiquetas = producao.QuantidadeEtiquetas;
+
+            producaoBanco.CalcularValidade();
+
+            _repository.AtualizarProducao(producaoBanco);
+
+            return producaoBanco;
+        }
+
+        public Producao DeletarProducao(int id)
+        {
+            var producaoBanco = _repository.ObterProducaoPorId(id);
+
+            if (producaoBanco == null)
+                throw new Exception("Produto não encontrado");
+            
+            _repository.DeletarProducao(producaoBanco);
+
+            return producaoBanco;
+        }
     }
 }

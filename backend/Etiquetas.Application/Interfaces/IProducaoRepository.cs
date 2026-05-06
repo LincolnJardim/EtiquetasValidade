@@ -13,5 +13,9 @@ namespace Etiquetas.Application.Interfaces
         Producao? ObterProducaoPorId(int Id);
 
         List<Producao> ListarProducoes();
+
+        void AtualizarProducao(Producao producao);
+
+        void DeletarProducao(Producao producao);
     }
 }

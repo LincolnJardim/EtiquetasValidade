@@ -13,6 +13,8 @@ namespace Etiquetas.Application.Interfaces
         List<Produto> ListarTodos();
 
         void AtualizarProduto(Produto produto);
+
+        void DeletarProduto(Produto produto);
         
     }
 }

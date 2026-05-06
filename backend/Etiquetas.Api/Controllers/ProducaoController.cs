@@ -28,7 +28,7 @@ namespace Etiquetas.Api.Controllers
             return Ok(producao);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("obterProducaoPorId{id}")]
         public IActionResult ObterProducaoPorId(int id)
         {
             var producao = _service.ObterProduçoesPorId(id);
@@ -37,6 +37,28 @@ namespace Etiquetas.Api.Controllers
                 return NotFound();
 
             return Ok(producao);
+        }
+
+        [HttpPut("atualizarProducao{id}")]
+        public IActionResult AtualizarProducao(int id, Producao producao)
+        {
+            var producaoAtualizado = _service.AtualizarProducao(id, producao);
+
+            if (producaoAtualizado == null)
+                return NotFound();
+
+            return Ok(producaoAtualizado);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletarProducao(int id)
+        {
+            var producaoBanco = _service.DeletarProducao(id);
+
+            if (producaoBanco == null)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

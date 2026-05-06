@@ -36,5 +36,17 @@ namespace Etiquetas.Infrastructure.Repositories
                 .Include(p => p.Produto)
                 .FirstOrDefault(p => p.Id == id);
         }
+
+        public void AtualizarProducao(Producao producao)
+        {
+            _context.Producoes.Update(producao);
+            _context.SaveChanges();
+        }
+
+        public void DeletarProducao(Producao producao)
+        {
+            _context.Producoes.Remove(producao);
+            _context.SaveChanges();
+        }
     }
 }
