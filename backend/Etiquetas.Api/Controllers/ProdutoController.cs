@@ -6,6 +6,7 @@ using Etiquetas.Domain.Entities;
 using Etiquetas.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Etiquetas.Application.Services;
+using Etiquetas.Application.DTOs;
 
 namespace Etiquetas.Api.Controllers
 {
@@ -21,9 +22,9 @@ namespace Etiquetas.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Criar(Produto produto)
+        public IActionResult Criar(CriarProdutoDto produtoDto)
         {
-            var novoProduto = _service.CriarProduto(produto);
+            var novoProduto = _service.CriarProduto(produtoDto);
             return Ok(novoProduto);
         }
 
@@ -39,11 +40,11 @@ namespace Etiquetas.Api.Controllers
         }
 
         [HttpPut("atualizarProduto{id}")]
-        public IActionResult AtualizarProduto(int id, Produto produto)
+        public IActionResult AtualizarProduto(AtualizarProdutoDto atualizarProdutoDto)
         {
-            var produtoAtualizado = _service.AtualizarProduto(id, produto);
+            var produtoAtualizado = _service.AtualizarProduto(atualizarProdutoDto);
 
-            if (produto == null)
+            if (atualizarProdutoDto == null)
                 return NotFound();
 
             return Ok(produtoAtualizado);
