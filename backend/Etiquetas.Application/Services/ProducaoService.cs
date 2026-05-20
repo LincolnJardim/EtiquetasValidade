@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Etiquetas.Application.DTOs;
 using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
 
@@ -21,32 +22,32 @@ namespace Etiquetas.Application.Services
             _produtoRepository = produtoRepository;
         }
 
-        public Producao CriarProducao(int produtoId, DateTime dataFabricacao, int quantidade)
+        public Producao CriarProducao(CriarProducaoDto criarProducaoDto)
         {
 
             
-            if (dataFabricacao > DateTime.Now)
+            if (criarProducaoDto.DataFabricacao > DateTime.Now)
                 throw new Exception("Data de fabricação não pode ser no futuro");
             
-            if (dataFabricacao < DateTime.Now.AddYears(-1))
+            if (criarProducaoDto.DataFabricacao < DateTime.Now.AddYears(-1))
                 throw new Exception("Data de fabricação muito antiga");
 
-            if (dataFabricacao == default)
+            if (criarProducaoDto.DataFabricacao == default)
                 throw new Exception("Data de fabricação inválida");
             
-            var produto = _produtoRepository.ObterPorId(produtoId);
+            var produto = _produtoRepository.ObterPorId(criarProducaoDto.ProdutoId);
 
             if (produto == null)
                 throw new Exception("Produto não encontrado");
             
-            if (quantidade <= 0)
+            if (criarProducaoDto.QuantidadeEtiquetas <= 0)
                 throw new Exception("Quantidade inválida");
             
             var producao = new Producao
             {
                 Produto = produto,
-                DataFabricacao = dataFabricacao,
-                QuantidadeEtiquetas = quantidade
+                DataFabricacao = criarProducaoDto.DataFabricacao,
+                QuantidadeEtiquetas = criarProducaoDto.QuantidadeEtiquetas
             };
 
             producao.CalcularValidade();
@@ -66,15 +67,15 @@ namespace Etiquetas.Application.Services
             return _repository.ListarProducoes();
         }
 
-        public Producao AtualizarProducao(int id, Producao producao)
+        public Producao AtualizarProducao(AtualizarProducaoDto atualizarProducaoDto)
         {
-            var producaoBanco = _repository.ObterProducaoPorId(id);
+            var producaoBanco = _repository.ObterProducaoPorId(atualizarProducaoDto.Id);
 
             if (producaoBanco == null)
                 throw new Exception("Produção não encontrado");
             
-            producaoBanco.DataFabricacao = producao.DataFabricacao;
-            producaoBanco.QuantidadeEtiquetas = producao.QuantidadeEtiquetas;
+            producaoBanco.DataFabricacao = atualizarProducaoDto.DataFabricacao;
+            producaoBanco.QuantidadeEtiquetas = atualizarProducaoDto.QuantidadeEtiquetas;
 
             producaoBanco.CalcularValidade();
 
