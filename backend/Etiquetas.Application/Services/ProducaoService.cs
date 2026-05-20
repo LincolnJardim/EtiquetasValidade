@@ -94,5 +94,33 @@ namespace Etiquetas.Application.Services
 
             return producaoBanco;
         }
+
+        public List<Etiqueta> GerarEtiqueta(int id)
+        {
+            var producaoBanco = _repository.ObterProducaoPorId(id);
+
+            if (producaoBanco == null)
+                throw new Exception("Produção não encontrado");
+
+            int gerarQuantidade = producaoBanco.QuantidadeEtiquetas;
+
+            List<Etiqueta> etiquetasgeradas = new List<Etiqueta>();
+
+            for (int contador = 0; contador < gerarQuantidade; contador++)
+            {
+                var etiqueta = new Etiqueta
+                {
+                    NomeProduto = producaoBanco.Produto.Nome,
+
+                    DataProducao = producaoBanco.DataFabricacao,
+
+                    DataValidade = producaoBanco.DataValidade
+                };
+
+                etiquetasgeradas.Add(etiqueta);
+            }
+        
+            return etiquetasgeradas;
+        }
     }
 }

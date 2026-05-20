@@ -20,7 +20,7 @@ namespace Etiquetas.Api.Controllers
             _service = service;
         }
 
-        [HttpPost]
+        
         [HttpPost]
         public IActionResult CriarProducao(int produtoId, DateTime dataFabricacao, int quantidade)
         {
@@ -59,6 +59,18 @@ namespace Etiquetas.Api.Controllers
                 return NotFound();
 
             return NoContent();
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GerarEtiqueta(int id)
+        {
+            var etiquetas = _service.GerarEtiqueta(id);
+
+            if (etiquetas == null)
+                return NotFound();
+            
+            return Ok(etiquetas);
+
         }
     }
 }

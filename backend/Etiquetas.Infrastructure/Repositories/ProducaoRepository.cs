@@ -48,5 +48,6 @@ namespace Etiquetas.Infrastructure.Repositories
             _context.Producoes.Remove(producao);
             _context.SaveChanges();
         }
+
     }
 }

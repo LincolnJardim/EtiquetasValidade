@@ -17,5 +17,7 @@ namespace Etiquetas.Application.Interfaces
         void AtualizarProducao(Producao producao);
 
         void DeletarProducao(Producao producao);
+
+
     }
 }
