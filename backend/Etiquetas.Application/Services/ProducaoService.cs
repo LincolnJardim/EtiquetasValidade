@@ -96,7 +96,7 @@ namespace Etiquetas.Application.Services
             return producaoBanco;
         }
 
-        public List<Etiqueta> GerarEtiqueta(int id)
+        public List<EtiquetaResponseDto> GerarEtiqueta(int id)
         {
             var producaoBanco = _repository.ObterProducaoPorId(id);
 
@@ -105,11 +105,11 @@ namespace Etiquetas.Application.Services
 
             int gerarQuantidade = producaoBanco.QuantidadeEtiquetas;
 
-            List<Etiqueta> etiquetasgeradas = new List<Etiqueta>();
+            List<EtiquetaResponseDto> etiquetasgeradas = new List<EtiquetaResponseDto>();
 
             for (int contador = 0; contador < gerarQuantidade; contador++)
             {
-                var etiqueta = new Etiqueta
+                var etiqueta = new EtiquetaResponseDto
                 {
                     NomeProduto = producaoBanco.Produto.Nome,
 
