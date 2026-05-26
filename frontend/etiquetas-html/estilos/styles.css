@@ -26,7 +26,7 @@ body {
     color: var(--cor-branca);
 }
 
-header {
+.cabecalho {
     background-color: #742713;
     margin: auto;
     padding: 20px;
@@ -35,7 +35,7 @@ header {
     text-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
 }
 
-nav {
+.menu {
     background-color: #A62F17;
     margin: auto;
     padding: 10px;
@@ -43,7 +43,7 @@ nav {
     justify-content: space-around;
 }
 
-nav > a {
+.menu > a {
     background-color: var(--cor-destaque);
     color: var(--cor-branca);
     font-weight: bolder;
@@ -106,7 +106,8 @@ h3 {
     text-align: center;
     color: var(--cor-branca);
 }
-div {
+
+.procurar {
     background-color: var(--cor-branca);
     display: flex;
     flex-direction: column;
@@ -116,4 +117,11 @@ div {
 
 table{
     color: var(--cor-texto);
+}
+
+.rodape {
+    background-color: var(--cor-primaria);
+    padding: 20px;
+    margin: auto;
+    text-align: center;
 }

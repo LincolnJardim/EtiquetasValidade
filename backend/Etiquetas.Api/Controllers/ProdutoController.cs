@@ -38,7 +38,7 @@ namespace Etiquetas.Api.Controllers
 
             return Ok(produto);
         }
-
+ 
         [HttpPut("atualizarProduto{id}")]
         public IActionResult AtualizarProduto(AtualizarProdutoDto atualizarProdutoDto)
         {

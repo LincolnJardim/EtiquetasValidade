@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="estilos/styles.css">
+    <link rel="stylesheet" href="estilos/media-query.css">
     <title>Home</title>
 </head>
 <body>
-    <header>
+    <header class="cabecalho">
         <h1>Etiqueta Express</h1> <!-- Nome provisorio e futuro logo -->
     </header>
 
-    <nav>
+    <nav class="menu">
         <a href="#">Produtos</a>
         <a href="#">Produções</a>
         <a href="#">Etiquetas</a>
@@ -19,18 +20,26 @@
 
     <main>
         <h2>Cadastrar Produto</h2>
-        <form action="#" method="post">
-            <label for="iproduto">Nome do Produto</label>
-            <input type="text" name="produto" id="iproduto" placeholder="Ex: Parmegiana de frango">
-
-            <label for="ivalidade">Validade do Produto</label>
-            <input type="number" name="validade" id="ivalidade" placeholder="Ex: 3">
-
-            <button type="submit">Cadastrar</button>
-        </form>
+        <section class="cadastro">
+            <form action="#" method="post">
+                <label for="iproduto">Nome do Produto</label>
+                <input type="text" name="produto" id="iproduto" placeholder="Ex: Parmegiana de frango">
+                <label for="ivalidade">Validade do Produto</label>
+                <input type="number" name="validade" id="ivalidade" placeholder="Ex: 3">
+                <button type="submit">Cadastrar</button>
+            </form>
+        </section>
 
         <h3>Listar Produtos</h3>
-        <div>
+        <section class="procurar">
+
+            <form action="#" method="get">
+                <label for="iprocurar">Procurar produto</label>
+                <input type="search" name="procurar" id="iprocurar" placeholder="Ex: Parmegiana de frango">
+
+                <button type="submit">Procurar</button>
+            </form>
+
             <table>
                 <caption>Lista de Produtos</caption>
                 <thead>
@@ -46,7 +55,11 @@
 
                 </tbody>
             </table>
-        </div>
+        </section>
+
+        <footer class="rodape">
+            <p>Desenvolvido by Lincoln Jardim</p>
+        </footer>
     </main>
 </body>
 </html>

@@ -1,0 +1,91 @@
+
+@media screen and (min-width: 1025px) {
+    body {
+        background-color: var(--cor-branca);
+        font-family: var(--fonte-principal);
+        color: var(--cor-branca);
+    }
+
+    .cabecalho {
+        background-color: #742713;
+        margin: auto;
+        padding: 40px;
+
+        font-size: 2em;
+        text-align: center;
+        text-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .menu {
+        background-color: #A62F17;
+        margin: auto;
+        padding: 20px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .menu > a {
+        background-color: var(--cor-destaque);
+        color: var(--cor-branca);
+        font-weight: bolder;
+        font-size: 1.5em;
+        text-align: center;
+
+        max-width: 450px;
+        width: 100%;
+        padding: 20px;
+        text-decoration: none;
+        border-radius: 10px;
+        box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+        background-color: var(--cor-destaque);
+        margin: 10px auto;
+        margin-bottom: 0px;
+        max-width: 1000px;
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+        font-size: 2em;
+        color: var(--cor-branca);
+
+        border-radius: 7px 7px 0px 0px;
+    }
+
+    .cadastro {
+        background-color: var(--cor-fundo);
+        margin: auto;
+        margin-bottom: 10px;
+        max-width: 1000px;
+        width: 100%;
+        border-radius: 0px 0px 7px 7px;
+
+    }
+
+    h3 {
+        background-color: var(--cor-destaque);
+        margin: auto;
+        margin: 10px auto;
+        margin-bottom: 0px;
+        padding: 15px;
+        text-align: center;
+        max-width: 1000px;
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+        font-size: 2em;
+        color: var(--cor-branca);
+
+        border-radius: 7px 7px 0px 0px;
+    }
+
+    .procurar {
+        background-color: var(--cor-fundo);
+        margin: auto;
+        margin-bottom: 10px;
+        max-width: 1000px;
+        width: 100%;
+        border-radius: 0px 0px 7px 7px;
+    }
+}
