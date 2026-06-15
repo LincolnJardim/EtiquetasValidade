@@ -1,6 +1,6 @@
 @media screen and (min-width: 1025px) {
     body {
-        background-image: url(/frontend/etiquetas-html/imagens/fundo-body.png);
+        background-image: url(../imagens/fundo-body.png);
         background-position: right center;
         font-family: var(--fonte-principal);
         color: var(--cor-branca);
