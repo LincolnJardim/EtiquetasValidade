@@ -43,9 +43,11 @@ function cadastrarProduto() {
             }
             } catch (erro) {
             console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
-            }
-                    
-        })
+            } 
+            
+            formulario.reset()
+        }
+    )
 }
 
 

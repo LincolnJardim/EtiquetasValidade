@@ -3,21 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilos/listaprodutos_styles.css">
+    <link rel="stylesheet" href="estilos/listaprodutos_media-query.css">
     <title>Lista de Produtos</title>
 </head>
 <body>
+    <header class="cabecalho">
 
-    <h3>Listar Produtos</h3>
+        <div class="logo">
+            <h1>Etiqueta Express</h1>
+        </div> <!-- Nome provisorio e futuro logo -->
+
+        <nav class="menu">
+            <ul>
+                <li>Produto</li>
+                <li>Lista de Produtos</li>
+                <li>Produção</li>
+                <li>Etiqueta</li>
+            </ul>
+        </nav>
+        
+    </header>
+
+    <main>
         <section class="procurar">
-
+            <h2>Listar Produtos</h2>
             <form action="#" method="get">
                 <label for="iprocurar">Procurar produto</label>
                 <input type="search" name="procurar" id="iprocurar" placeholder="Ex: Parmegiana de frango">
-
                 <button type="submit">Procurar</button>
             </form>
+        </section>
 
-            <table>
+        <div class="tabela-container">
+
+            <table id="itabela">
                 <caption>Lista de Produtos</caption>
                 <thead>
                     <tr>
@@ -27,12 +47,18 @@
                         <th>Ações</th>
                     </tr>
                 </thead>
-
                 <tbody>
-
                 </tbody>
+
             </table>
-        </section>
-    
+        </div>
+        
+    </main>
+
+    <footer class="rodape">
+        <p>Desenvolvido by Lincoln Jardim</p>
+    </footer>
+
+    <script src="javascript/script.js"></script>
 </body>
 </html>

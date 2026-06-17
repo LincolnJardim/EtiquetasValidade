@@ -1,0 +1,88 @@
+@media screen and (min-width: 1025px) {
+    body {
+        background-image: url(../imagens/fundo-body.png);
+        background-position: right center;
+        font-family: var(--fonte-principal);
+        color: var(--cor-branca);
+        overflow: hidden;
+    }
+
+    /* 1. O CABEÇALHO (O PAI): Comanda a divisão dos cantos */
+    .cabecalho {
+        background-image: linear-gradient(var(--cor-primaria), var(--cor-secundaria));
+        text-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
+        
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        padding: 20px 50px;
+        
+        display: flex;
+        flex-direction: row; /* Força os filhos (logo e menu) a ficarem na mesma linha */
+        justify-content: space-between; /* Empurra a logo para a esquerda e o menu para a direita */
+        align-items: center; /* Alinha os dois verticalmente no centro da barra */
+        z-index: 3;
+    }
+
+    /* 2. A LOGO (FILHO 1): Reseta possíveis quebras */
+    .logo {
+        margin: 0;
+    }
+
+    /* 3. O MENU (FILHO 2): Remove o 'margin: auto' do mobile que travava ele no meio */
+    .menu {
+        margin: 0; /* CORRIGIDO: Destrava o menu do centro da tela */
+        padding: 0;
+    }
+
+    /* 4. A LISTA: Controla o alinhamento interno dos botões */
+    .menu > ul {
+        display: flex;
+        flex-direction: row; 
+        gap: 48px; /* Mantém o espaçamento fixo e lindo entre os botões */
+        padding-left: 0; /* Limpa o padding padrão do navegador */
+        margin: 0;
+    }
+
+    .menu > ul > li {
+        cursor: pointer;
+    }
+
+    /* 5. CONTEÚDO PRINCIPAL: Empurra o formulário para baixo e para a direita */
+    main {
+        margin-top: 100px; 
+        margin: 100px;
+    }
+
+    .procurar {
+        background-color: rgba(241, 228, 220, 0.85);
+        margin: auto;
+        max-width: 900px;
+        
+
+        border-radius: 5px;
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.363);
+    }
+
+    label{
+        text-align: center;
+    }
+    input {
+        width: 500px;
+    }
+
+    .tabela-container {
+        background-color: var(--cor-branca);
+
+        margin: auto;
+        margin-top: 20px;
+        max-width: 900px;
+    }
+
+
+
+    .rodape {
+        margin-top: auto; /* Força o rodapé a colar na base se sobrar espaço */
+    }
+}

@@ -1,0 +1,138 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --cor-primaria: #742713;
+    --cor-secundaria: #A62F17;
+    --cor-destaque: #052027;
+    --cor-fundo: #F1E4DC;
+    --cor-texto: #401E15;
+    --cor-branca: #FFFFFF;
+
+    --fonte-principal: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    list-style: none;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    font-family: var(--fonte-principal);
+    color: var(--cor-branca);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* Faz o body controlar o espaço do rodapé */
+
+    min-height: 100vh;
+    position: relative;
+}
+
+main {
+    flex: 1; /* Melhora técnica: empurra o rodapé para o final da página se ela estiver vazia */
+}
+
+.cabecalho {
+    background-image: linear-gradient(var(--cor-primaria), var(--cor-secundaria));
+    padding: 20px;
+    text-align: center;
+    text-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
+}
+
+.menu {
+    margin: auto;
+    padding: 10px;
+}
+
+.menu > ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-left: 0;
+}
+
+.menu > ul > li {
+    background-color: var(--cor-destaque);
+    color: var(--cor-branca);
+    font-weight: bolder;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 10px;
+    box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    background-color: var(--cor-destaque);
+    padding: 15px;
+    text-align: center;
+    color: var(--cor-branca);
+}
+
+form {
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%; /* Garante que o form não vaze em telas mini */
+}
+
+label {
+    padding: 7px 0; /* Ajustado para alinhar perfeitamente à esquerda */
+    font-size: 1.3em; /* Reduzido um pouquinho só pro mobile não quebrar linha */
+    font-weight: bolder;
+    color: var(--cor-texto);
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+input {
+    padding: 12px; /* Aumentado 2px para melhorar o toque no celular */
+    width: 100%;   /* Melhoria: input ocupa toda a largura disponível no mobile */
+    border-radius: 7px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--cor-texto); /* Trocado de 'black' para a sua variável de texto */
+    margin-bottom: 15px; /* Espaçamento entre o input e a próxima label */
+}
+
+button {
+    background-color: var(--cor-destaque);
+    font-size: 1.2em;
+    font-weight: bolder;
+    color: var(--cor-branca);
+    padding: 15px 30px;
+    margin: 10px auto; /* Alinhado */
+    width: fit-content; /* Faz o botão ter o tamanho apenas do texto dele */
+    border-radius: 12px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    border: none;
+    cursor: pointer;
+}
+
+.procurar {
+    background-color: var(--cor-branca);
+    display: flex;
+    flex-direction: column;
+}
+
+table {
+    color: var(--cor-texto);
+    width: 100%;
+    padding: 10px;
+}
+
+.rodape {
+    background-color: var(--cor-primaria);
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    /* Removido o position: fixed para o mobile respirar melhor */
+    position: absolute; /* Arranca o rodapé do fluxo para ele ignorar o main vazio */
+    bottom: 0;          /* Prega ele na base absoluta da tela */
+    left: 0;            /* Alinha na esquerda */
+    width: 100%;        /* Força a ocupar a largura toda */
+    padding: 20px 50px;
+    z-index: 4;         /* Fica acima do fundo */
+}
