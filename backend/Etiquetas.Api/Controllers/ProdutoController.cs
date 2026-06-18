@@ -28,6 +28,14 @@ namespace Etiquetas.Api.Controllers
             return Ok(novoProduto);
         }
 
+        [HttpGet("listarProdutosCadastrados")]
+        public IActionResult ListarTodos()
+        {
+            var listaProdutos = _service.ListarTodos();
+
+            return Ok(listaProdutos);
+        }
+
         [HttpGet("obterProdutoPorId{id}")]
         public IActionResult ObterPorId(int id)
         {

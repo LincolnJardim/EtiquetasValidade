@@ -4,7 +4,6 @@
         background-position: right center;
         font-family: var(--fonte-principal);
         color: var(--cor-branca);
-        overflow: hidden;
     }
 
     /* 1. O CABEÇALHO (O PAI): Comanda a divisão dos cantos */

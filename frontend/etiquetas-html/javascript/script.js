@@ -1,7 +1,6 @@
 // Manipulação do DOM para esperar a página HTML carregar por completo antes de chamar a função cadastrarProduto()
 document.addEventListener('DOMContentLoaded', function() {
-    cadastrarProduto() 
-    
+    cadastrarProduto()
 })
 
 // Função responsável em capturar dados do formulario e enviar para API criar um produto na tabela produto, sendo chamada pelo form "cadastrar produto".
@@ -49,7 +48,6 @@ function cadastrarProduto() {
         }
     )
 }
-
 
 /*function validarConexão() {
     window.alert('JavaScript conectado.')
