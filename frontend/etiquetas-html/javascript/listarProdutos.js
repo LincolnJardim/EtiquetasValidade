@@ -25,11 +25,20 @@ async function listarProdutos() {
                     <td>${produtos[posição].nome}</td>
                     <td>${produtos[posição].diasValidade}</td>
                     <td>
-                        <button class="btn-editar">Editar</button>
+                        <button class="btn-editar" data-produto-id="${produtos[posição].id}">Editar</button>
                         <button class="btn-excluir" data-produto-id="${produtos[posição].id}">Excluir</button>
                     </td>
                 `
+                const botaoEditar = linha.querySelector('.btn-editar')
                 const botaoExcluir = linha.querySelector('.btn-excluir')
+
+                botaoEditar.addEventListener('click', function(evento) {
+                    const elementoClicado = evento.target
+
+                    const idProduto = elementoClicado.dataset.produtoId
+
+                    window.location.href = `editarProdutos.html?id=${idProduto}`
+                })
 
                 
                 botaoExcluir.addEventListener('click', function(evento) {
