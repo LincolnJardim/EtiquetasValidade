@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilos/criarproducao.css">
+    <link rel="stylesheet" href="estilos/criarproducao_media-query.css">
+    <title>Cadastrar Produção</title>
+</head>
+<body>
+    <header class="cabecalho">
+
+        <div class="logo">
+            <h1>Etiqueta Express</h1>
+        </div> <!-- Nome provisorio e futuro logo -->
+
+        <nav class="menu">
+            <ul>
+                <li>Produto</li>
+                <li>Lista de Produtos</li>
+                <li>Produção</li>
+                <li>Etiqueta</li>
+            </ul>
+        </nav>
+        
+    </header>
+
+
+    <main>
+        <section class="cadastro">
+            <h2>Cadastrar Produção</h2>
+
+            <form id="icadastro">
+
+                <label for="drop-produto">Produto</label>
+                <select name="produção" id="idrop-produto" >
+                    <option value="" disabled selected>Selecione um produto</option>
+                </select>
+
+                <label for="idatafabricacao">Data de Fabricação</label>
+                <input type="date" name="datafabricacao" id="idatafabricacao">
+
+                <label for="ietiquetas">Quantidade de Etiquetas</label>
+                <input type="number" name="etiquetas" id="ietiquetas">
+
+                <button type="submit">Cadastrar</button>
+            </form>
+
+        </section>
+
+    </main>
+
+    <footer class="rodape">
+        <p>Desenvolvido by Lincoln Jardim</p>
+    </footer>
+
+    <script src="javascript/criarProducao.js"></script>
+</body>
+</html>
