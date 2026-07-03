@@ -60,12 +60,17 @@ function cadastrarProducao() {
     formulario.addEventListener('submit', async function(evento) {
         evento.preventDefault()
 
-        let produto = document.getElementById('idrop-produto').value
+        let dropdownProduto = document.getElementById('idrop-produto')
         let dataFabricacao = document.getElementById('idatafabricacao').value
         let quantidadeEtiquetas = document.getElementById('ietiquetas').value
 
+        let produtoId = dropdownProduto.value
+        let nomeProduto = dropdownProduto.options[dropdownProduto.selectedIndex].text
+
+        
+
         let producaoJson = {
-            produtoId: produto,
+            produtoId: Number(produtoId),
             dataFabricacao: dataFabricacao,
             quantidadeEtiquetas: Number(quantidadeEtiquetas)
         }
@@ -80,15 +85,15 @@ function cadastrarProducao() {
             })
 
             if (resposta.ok) {
-                window.alert(`A produção ${producaoJson.produtoId} foi cadastrada com sucesso.`)
+                window.alert(`A produção ${nomeProduto} foi cadastrada com sucesso.`)
+
+                formulario.reset()
             } else {
                 window.alert('O servidor C# recebeu, mas retornou um erro.')
             }
         } catch (erro) {
             console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
         }
-
-        formulario.reset()
 
         preencherDataAtual()
     }) 

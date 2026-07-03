@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilos/listaprodutos_styles.css">
+    <link rel="stylesheet" href="estilos/listaprodutos_media-query.css">
+    <title>Lista de Produções</title>
+</head>
+<body>
+    <header class="cabecalho">
+
+        <div class="logo">
+            <h1>Etiqueta Express</h1>
+        </div> <!-- Nome provisorio e futuro logo -->
+
+        <nav class="menu">
+            <ul>
+                <li>Produto</li>
+                <li>Lista de Produtos</li>
+                <li>Produção</li>
+                <li>Lista de Produções</li>
+                <li>Etiqueta</li>
+            </ul>
+        </nav>
+        
+    </header>
+
+    <main>
+        <section class="procurar">
+            <h2>Listar produções</h2>
+            <form>
+                <label for="iprocurar">Procurar produção</label>
+                <input type="search" name="procurar" id="iprocurar" placeholder="Ex: Parmegiana de frango">
+                <button type="submit">Procurar</button>
+            </form>
+        </section>
+
+        <div class="tabela-container">
+
+            <table id="itabela">
+                <caption>Lista de produções</caption>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nome da Produção</th>
+                        <th>Data Fabricação</th>
+                        <th>Data de Validade</th>
+                        <th>Quantidade de Etiquetas</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+        
+    </main>
+
+    <footer class="rodape">
+        <p>Desenvolvido by Lincoln Jardim</p>
+    </footer>
+
+    <script src="javascript/listarProducoes.js"></script>
+</body>
+</html>
