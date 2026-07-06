@@ -43,7 +43,7 @@ async function listarProducao() {
                 const botaoExcluir = linha.querySelector('.btn-excluir')
                 const botaoEtiqueta = linha.querySelector('.btn-etiqueta')
 
-                botaoEditar.addEventListener('click', function(evento) {
+                botaoEditar.addEventListener('click', function (evento) {
                     const elementoClicado = evento.target
 
                     const idProducao = elementoClicado.dataset.producaId
@@ -51,17 +51,17 @@ async function listarProducao() {
                     window.location.href = `editarProducao.html?id=${idProducao}`
                 })
 
-                
-                botaoExcluir.addEventListener('click', function(evento) {
-                    
+
+                botaoExcluir.addEventListener('click', function (evento) {
+
                     const elementoClicado = evento.target
 
                     const idProducao = elementoClicado.dataset.producaoId
 
-                    deletarProduto(idProducao)
+                    deletarProducao(idProducao)
                 })
 
-                botaoEtiqueta.addEventListener('click', function(evento) {
+                botaoEtiqueta.addEventListener('click', function (evento) {
 
                     const elementoClicado = evento.target
 
@@ -69,10 +69,36 @@ async function listarProducao() {
 
                     window.location.href = `gerarEtiqueta.html?id=${idProducao}`
                 })
-               
+
 
                 tabela.appendChild(linha)
             }
+        }
+    } catch (erro) {
+        console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
+    }
+}
+
+async function deletarProducao(id) {
+    let confirmarExclusao = window.confirm('Você deseja excluir essa produção? Essa ação é permanente')
+
+    if (!confirmarExclusao) {
+        window.alert("Produção não será excluido!")
+        return
+    }
+
+    try {
+        const resposta = await fetch(`https://localhost:7288/producao/${id}`,
+            {
+                method: "DELETE"
+            })
+
+        if (resposta.ok) {
+            window.alert('Produção excluida com sucesso!')
+
+            await listarProducao()
+        } else {
+            window.alert('Não foi possível excluir produção')
         }
     } catch (erro) {
         console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
