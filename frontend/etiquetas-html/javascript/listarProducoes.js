@@ -46,7 +46,8 @@ async function listarProducao() {
                 botaoEditar.addEventListener('click', function (evento) {
                     const elementoClicado = evento.target
 
-                    const idProducao = elementoClicado.dataset.producaId
+                    const idProducao = elementoClicado.dataset.producaoId
+
 
                     window.location.href = `editarProducao.html?id=${idProducao}`
                 })
