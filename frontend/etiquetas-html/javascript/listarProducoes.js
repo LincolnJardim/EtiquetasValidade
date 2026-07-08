@@ -34,7 +34,7 @@ async function listarProducao() {
 
                     <button class="btn-excluir" data-producao-id="${listaProducao[posicao].id}">Excluir</button>
 
-                    <button class="btn-etiqueta" data-producao-id="${listaProducao[posicao].id}">Etiqueta</button>
+                    <button class="btn-etiqueta" data-producao-id="${listaProducao[posicao].id}">Gerar Etiqueta</button>
                 
                 </td>
                 `
@@ -66,7 +66,7 @@ async function listarProducao() {
 
                     const elementoClicado = evento.target
 
-                    const idProducao = elementoClicado.dataset.producaId
+                    const idProducao = elementoClicado.dataset.producaoId
 
                     window.location.href = `gerarEtiqueta.html?id=${idProducao}`
                 })

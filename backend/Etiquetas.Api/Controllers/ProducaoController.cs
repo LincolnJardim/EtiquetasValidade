@@ -70,7 +70,7 @@ namespace Etiquetas.Api.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("gerarEtiqueta{id}")]
         public IActionResult GerarEtiqueta(int id)
         {
             var etiquetas = _service.GerarEtiqueta(id);
