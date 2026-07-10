@@ -1,6 +1,7 @@
 // Manipulação do DOM para esperar a página HTML carregar por completo antes de chamar a função cadastrarProduto()
 document.addEventListener('DOMContentLoaded', async function () {
     await carregarEtiquetas()
+    configurarBotaoImprimir()
 })
 
 async function carregarEtiquetas() {
@@ -32,10 +33,20 @@ async function carregarEtiquetas() {
 
                     let elementoEtiqueta = document.createElement('div')
 
+                    elementoEtiqueta.classList.add('etiqueta')
+
                     elementoEtiqueta.innerHTML = `
-                        <p>Produto: ${etiqueta.nomeProduto}</p>
-                        <p>Fabricação: ${dataFabricacao}</p>
-                        <p>Validade: ${dataValidade}</p>
+                        <h2>Etiqueta Express</h2>
+
+                        <p>Produto</p>
+                        <strong>${etiqueta.nomeProduto}</strong>
+
+                        <hr>
+
+                        <p>Fabricação</p>
+                        <strong>${dataFabricacao}</strong>
+                        <p>Validade</p>
+                        <strong>${dataValidade}</strong>
                     `
 
                     containerEtiquetas.appendChild(elementoEtiqueta)
@@ -46,6 +57,16 @@ async function carregarEtiquetas() {
             console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
         }
     }
+}
+
+function configurarBotaoImprimir() {
+
+    console.log("Configurei o botão");
+    let btnImprimir = document.getElementById('imprimir')
+
+    btnImprimir.addEventListener('click', function() {
+        window.print()
+    })
 }
 
 function formatarData(dataApi) {

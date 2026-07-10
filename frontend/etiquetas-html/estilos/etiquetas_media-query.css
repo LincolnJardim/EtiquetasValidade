@@ -1,0 +1,304 @@
+@charset "UTF-8";
+
+/*
+    PROTÓTIPO DE ETIQUETA:
+    76,2 mm x 50,8 mm = 3 x 2 polegadas.
+
+    ADENDO FUTURO:
+    Quando a impressora e o rolo forem definidos,
+    substitua essas medidas pelo tamanho exato da etiqueta física.
+*/
+@page {
+    size: 76.2mm 50.8mm;
+    margin: 0;
+}
+
+@media print {
+
+    /*
+        Remove margens, preenchimentos e configurações
+        de layout utilizadas somente na tela.
+    */
+    html,
+    body {
+        width: 76.2mm;
+        margin: 0;
+        padding: 0;
+
+        background-color: #ffffff;
+    }
+
+    body {
+        min-height: 0;
+        position: static;
+
+        display: block;
+
+        color: #000000;
+
+        /*
+            Arial é utilizada por ser simples e legível
+            em impressões pequenas e monocromáticas.
+        */
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /*
+        Esconde os elementos da interface que não fazem
+        parte da etiqueta impressa.
+    */
+    .cabecalho,
+    .acoes-etiquetas,
+    .rodape {
+        display: none !important;
+    }
+
+    /*
+        Remove o comportamento flexível que o main
+        utiliza na versão mobile.
+    */
+    main {
+        display: block;
+        flex: none;
+
+        width: 76.2mm;
+
+        margin: 0;
+        padding: 0;
+    }
+
+    /*
+        Remove o flex, o espaçamento e as margens
+        utilizados para mostrar as etiquetas na tela.
+    */
+    div#etiquetas-container {
+        display: block;
+
+        width: 76.2mm;
+
+        margin: 0;
+        padding: 0;
+
+        gap: 0;
+    }
+
+    /*
+        Configuração física de cada etiqueta.
+
+        ADENDO FUTURO:
+        width e height devem sempre acompanhar as medidas
+        colocadas no @page.
+    */
+    div.etiqueta {
+        width: 76.2mm;
+        height: 50.8mm;
+
+        margin: 0;
+        padding: 3.5mm;
+
+        box-sizing: border-box;
+
+        /*
+            Organiza produto e datas sem precisar
+            modificar o HTML criado pelo JavaScript.
+        */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows:
+            auto
+            auto
+            minmax(8mm, 1fr)
+            auto
+            auto
+            auto;
+
+        column-gap: 4mm;
+
+        background-color: #ffffff;
+        color: #000000;
+
+        /*
+            Mantém uma borda visível no protótipo em PDF.
+
+            ADENDO FUTURO:
+            A borda poderá ser removida na impressora real
+            usando "border: none", caso a etiqueta não deva
+            imprimir um contorno.
+        */
+        border: 0.35mm solid #000000;
+        border-radius: 0;
+
+        /*
+            Remove a sombra utilizada apenas na tela.
+        */
+        box-shadow: none;
+
+        /*
+            Impede o conteúdo de ultrapassar fisicamente
+            os limites da etiqueta.
+        */
+        overflow: hidden;
+
+        /*
+            Impede que uma etiqueta seja dividida
+            entre duas páginas.
+        */
+        break-inside: avoid-page;
+        page-break-inside: avoid;
+
+        /*
+            Cada div.etiqueta gera uma nova página
+            no PDF ou uma nova etiqueta no rolo.
+        */
+        break-after: page;
+        page-break-after: always;
+
+        /*
+            Solicita ao navegador que preserve
+            os estilos durante a impressão.
+        */
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    /*
+        Evita que o navegador crie uma página vazia
+        depois da última etiqueta.
+    */
+    div.etiqueta:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    /*
+        Título da etiqueta.
+    */
+    div.etiqueta h2 {
+        grid-column: 1 / -1;
+        grid-row: 1;
+
+        margin: 0 0 1.5mm 0;
+
+        font-size: 12pt;
+        font-weight: 700;
+        line-height: 1;
+
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    /*
+        Configuração geral dos textos auxiliares:
+        Produto, Fabricação e Validade.
+    */
+    div.etiqueta p {
+        margin: 0 0 0.5mm 0;
+
+        color: #000000;
+
+        font-size: 7.5pt;
+        font-weight: 700;
+        line-height: 1;
+
+        text-transform: uppercase;
+        letter-spacing: 0.2mm;
+    }
+
+    /*
+        Posiciona o texto "Produto" usando
+        toda a largura da etiqueta.
+    */
+    div.etiqueta p:first-of-type {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+
+    /*
+        Posiciona o texto "Fabricação"
+        na coluna esquerda.
+    */
+    div.etiqueta p:nth-of-type(2) {
+        grid-column: 1;
+        grid-row: 5;
+    }
+
+    /*
+        Posiciona o texto "Validade"
+        na coluna direita.
+    */
+    div.etiqueta p:nth-of-type(3) {
+        grid-column: 2;
+        grid-row: 5;
+    }
+
+    /*
+        Configuração geral dos valores:
+        nome do produto e datas.
+    */
+    div.etiqueta strong {
+        display: block;
+
+        margin: 0;
+
+        color: #000000;
+
+        font-size: 11pt;
+        font-weight: 700;
+        line-height: 1.05;
+    }
+
+    /*
+        Nome do produto ocupando toda a largura.
+
+        O overflow impede que nomes muito grandes
+        ultrapassem o limite da etiqueta.
+    */
+    div.etiqueta strong:first-of-type {
+        grid-column: 1 / -1;
+        grid-row: 3;
+
+        align-self: start;
+
+        font-size: 13pt;
+        line-height: 1.05;
+
+        overflow: hidden;
+        overflow-wrap: anywhere;
+    }
+
+    /*
+        Data de fabricação na coluna esquerda.
+    */
+    div.etiqueta strong:nth-of-type(2) {
+        grid-column: 1;
+        grid-row: 6;
+
+        font-size: 11pt;
+    }
+
+    /*
+        Data de validade na coluna direita e com
+        um pouco mais de destaque.
+    */
+    div.etiqueta strong:nth-of-type(3) {
+        grid-column: 2;
+        grid-row: 6;
+
+        font-size: 13pt;
+    }
+
+    /*
+        Linha divisória entre o produto e as datas.
+    */
+    div.etiqueta hr {
+        grid-column: 1 / -1;
+        grid-row: 4;
+
+        width: 100%;
+
+        margin: 1mm 0 1.5mm 0;
+
+        border: 0;
+        border-top: 0.35mm solid #000000;
+    }
+}
