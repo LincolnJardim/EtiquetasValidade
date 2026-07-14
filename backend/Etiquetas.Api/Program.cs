@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Etiquetas.Infrastructure.Repositories;
 using Etiquetas.Application.Services;
 using Etiquetas.Application.Interfaces;
+using Etiquetas.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,15 @@ builder.Services.AddScoped<ProdutoService>();
 //Produção
 builder.Services.AddScoped<IProducaoRepository, ProducaoRepository>();
 builder.Services.AddScoped<ProducaoService>();
+
+// Usuário
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<UsuarioService>();
+
+builder.Services.AddScoped<
+    IPasswordHasher<Usuario>,
+    PasswordHasher<Usuario>
+>();
 
 
 builder.Services.AddDbContext<EtiquetaDbContext>(options =>
