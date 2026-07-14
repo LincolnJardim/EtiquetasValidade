@@ -166,3 +166,4 @@ C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Api\bin\Debug\net10.0
 C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Api\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Api\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Api\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\linco\Desktop\EtiquetasValidade\backend\Etiquetas.Api\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

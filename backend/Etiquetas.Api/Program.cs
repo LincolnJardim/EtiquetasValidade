@@ -5,6 +5,7 @@ using Etiquetas.Application.Services;
 using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Etiquetas.Api.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,8 @@ builder.Services.AddScoped<ProducaoService>();
 // Usuário
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
 builder.Services.AddScoped<
     IPasswordHasher<Usuario>,
