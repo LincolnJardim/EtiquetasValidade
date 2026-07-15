@@ -1,0 +1,14 @@
+@media screen and (min-width: 1025px) {
+    section {
+        width: 600px;
+    }
+    
+    input {
+        margin-left: 40px;
+    }
+
+    button {
+        display: block;
+        margin: 20px auto 0;
+    }
+}

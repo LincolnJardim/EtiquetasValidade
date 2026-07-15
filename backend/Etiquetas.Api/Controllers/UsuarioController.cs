@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Etiquetas.Application.DTOs;
 using Etiquetas.Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Etiquetas.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class UsuarioController : ControllerBase
     {
         private readonly UsuarioService _usuarioService;

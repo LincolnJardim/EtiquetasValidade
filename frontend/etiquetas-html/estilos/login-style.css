@@ -1,0 +1,106 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --cor-primaria: #742713;
+    --cor-secundaria: #A62F17;
+    --cor-destaque: #052027;
+    --cor-fundo: #F1E4DC;
+    --cor-texto: #401E15;
+    --cor-branca: #FFFFFF;
+
+    --fonte-principal: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    list-style: none;
+}
+
+body {
+    background-color: var(--cor-primaria);
+    font-family: var(--fonte-principal);
+    height: 100vh;
+    width: 100vw;
+}
+
+main {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+}
+
+section {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    
+    overflow: hidden;
+
+    background-color: white;
+    width: 300px;
+    min-height: 500px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.452);
+    transform: translate(-50%, -50%);
+
+    transition: width 0.3s, height 0.3s;
+    transition-timing-function: ease;
+}
+
+h1 {
+    background-color: #052027;
+    padding: 20px;
+    text-align: center;
+    color: var(--cor-branca);
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.7em;
+    padding: 10px;
+}
+
+#formulario-login {
+    padding: 25px;
+}
+
+label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+
+
+input {
+    padding: 20px;
+    margin: 20px;
+    width: 200px;
+    height: 30px;
+
+    border: 0px;
+    border-bottom: 1px solid #401E15;
+}
+
+button {
+    background-color: var(--cor-destaque);
+    font-size: 1.2em;
+    font-weight: bolder;
+    color: var(--cor-branca);
+    padding: 15px 30px;
+    margin-left: 65px; /* Alinhado */
+    width: fit-content; /* Faz o botão ter o tamanho apenas do texto dele */
+    border-radius: 12px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    border: none;
+    cursor: pointer;
+}
+
+#mensagem-login {
+    display: none;
+}

@@ -7,11 +7,13 @@ using Etiquetas.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Etiquetas.Application.Services;
 using Etiquetas.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Etiquetas.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ProdutoController : ControllerBase
     {
         private readonly ProdutoService _service;
