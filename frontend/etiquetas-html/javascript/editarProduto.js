@@ -1,75 +1,116 @@
-// Manipulação do DOM para esperar a página HTML carregar por completo antes de chamar a função cadastrarProduto()
+// Espera o HTML carregar antes de iniciar a edição do produto.
 document.addEventListener('DOMContentLoaded', function () {
     editarProduto()
 })
 
 async function editarProduto() {
     const parametros = new URLSearchParams(window.location.search)
-
     const idUrl = parametros.get('id')
 
+    const token = exigirAutenticacao()
+
+    if (!token) {
+        return
+    }
+
     if (idUrl === null) {
-        window.alert('Produto inválido. Voltando para a lista')
-        window.location.href = 'listarProduto.html'
-    } else {
+        window.alert('Produto inválido. Voltando para a lista.')
+        window.location.href = 'lista_produtos.html'
+        return
+    }
 
-        try {
-            const resposta = await fetch(`https://localhost:7288/Produto/obterProdutoPorId${idUrl}`, {
-                method: 'GET'
-            })
+    try {
+        const resposta = await fetch(
+            `https://localhost:7288/Produto/obterProdutoPorId${idUrl}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
 
-            if (resposta.ok) {
-                let produtoBanco = await resposta.json()
+        if (tratarNaoAutorizado(resposta)) {
+            return
+        }
 
-                let nomeProduto = document.getElementById('iproduto')
-                let validadeProduto = document.getElementById('ivalidade')
+        if (!resposta.ok) {
+            window.alert('Não foi possível carregar o produto.')
+            window.location.href = 'lista_produtos.html'
+            return
+        }
 
-                nomeProduto.value = `${produtoBanco.nome}`
-                validadeProduto.value = `${produtoBanco.diasValidade}`
+        const produtoBanco = await resposta.json()
+
+        const nomeProdutoInput = document.getElementById('iproduto')
+        const validadeProdutoInput = document.getElementById('ivalidade')
+
+        nomeProdutoInput.value = produtoBanco.nome
+        validadeProdutoInput.value = produtoBanco.diasValidade
+
+        const formulario = document.getElementById('icadastro')
+
+        formulario.addEventListener('submit', async function (evento) {
+            evento.preventDefault()
+
+            const tokenAtual = exigirAutenticacao()
+
+            if (!tokenAtual) {
+                return
             }
 
-            const formulario = document.getElementById('icadastro')
+            const nomeProduto =
+                document.getElementById('iproduto').value
 
-            formulario.addEventListener('submit', async function (evento) {
-                evento.preventDefault()
+            const diasValidade =
+                document.getElementById('ivalidade').value
 
-                // Bloco para captura dos valores dos inputs.
-                let nomeProduto = document.getElementById('iproduto').value
-                let diasValidade = document.getElementById('ivalidade').value
+            const produtoJson = {
+                id: Number(idUrl),
+                nome: nomeProduto,
+                diasValidade: Number(diasValidade)
+            }
 
-                //console.log(`O produto ${nomeProduto} tem a validade de ${diasValidade}`)
-
-                // Montagem do objeto Json.
-                let produtoJson = {
-                    id: Number(idUrl),
-                    Nome: nomeProduto,
-                    DiasValidade: Number(diasValidade)
-                }
-
-                try {
-                    const resposta = await fetch(`https://localhost:7288/Produto/atualizarProduto${idUrl}`, {
-                        method: "PUT",
+            try {
+                const respostaAtualizacao = await fetch(
+                    `https://localhost:7288/Produto/atualizarProduto${idUrl}`,
+                    {
+                        method: 'PUT',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${tokenAtual}`
                         },
                         body: JSON.stringify(produtoJson)
-                    })
-
-                    if (resposta.ok) {
-                        window.alert(`O produto ${produtoJson.Nome} foi atualizado com sucesso.`)
-
-                        window.location.href = 'lista_produtos.html'
-                    } else {
-                        window.alert('O servidor C# recebeu, mas retornou um erro.')
                     }
-                } catch (erro) {
-                    console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
+                )
+
+                if (tratarNaoAutorizado(respostaAtualizacao)) {
+                    return
                 }
-            })
 
+                if (!respostaAtualizacao.ok) {
+                    window.alert(
+                        'O servidor recebeu a solicitação, mas não conseguiu atualizar o produto.'
+                    )
+                    return
+                }
 
-        } catch (erro) {
-            console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
-        }
+                window.alert(
+                    `O produto ${produtoJson.nome} foi atualizado com sucesso.`
+                )
+
+                window.location.href = 'lista_produtos.html'
+            } catch (erro) {
+                console.error(
+                    'Erro de rede: a API pode estar desligada ou fora do ar.',
+                    erro
+                )
+            }
+        })
+    } catch (erro) {
+        console.error(
+            'Erro de rede: a API pode estar desligada ou fora do ar.',
+            erro
+        )
     }
 }

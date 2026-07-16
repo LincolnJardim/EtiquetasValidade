@@ -1,16 +1,29 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     listarProdutos()
 })
 
 async function listarProdutos() {
     const tabela = document.querySelector('#itabela tbody')
-    
+
     tabela.innerHTML = ''
+
+    const token = exigirAutenticacao()
+
+    if (!token) {
+        return
+    }
 
     try {
         const resposta = await fetch('https://localhost:7288/Produto/listarProdutosCadastrados', {
-            method: 'GET'
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         })
+
+        if (tratarNaoAutorizado(resposta)) {
+            return
+        }
 
         if (resposta.ok) {
             let produtos = await resposta.json()
@@ -19,7 +32,7 @@ async function listarProdutos() {
             for (let posição = 0; posição < tamanho; posição++) {
 
                 let linha = document.createElement('tr')
-                
+
                 linha.innerHTML = `
                     <td>${produtos[posição].id}</td>
                     <td>${produtos[posição].nome}</td>
@@ -32,7 +45,7 @@ async function listarProdutos() {
                 const botaoEditar = linha.querySelector('.btn-editar')
                 const botaoExcluir = linha.querySelector('.btn-excluir')
 
-                botaoEditar.addEventListener('click', function(evento) {
+                botaoEditar.addEventListener('click', function (evento) {
                     const elementoClicado = evento.target
 
                     const idProduto = elementoClicado.dataset.produtoId
@@ -40,9 +53,9 @@ async function listarProdutos() {
                     window.location.href = `editarProdutos.html?id=${idProduto}`
                 })
 
-                
-                botaoExcluir.addEventListener('click', function(evento) {
-                    
+
+                botaoExcluir.addEventListener('click', function (evento) {
+
                     const elementoClicado = evento.target
 
                     const idProduto = elementoClicado.dataset.produtoId
@@ -53,10 +66,10 @@ async function listarProdutos() {
                 tabela.appendChild(linha)
             }
         }
-        
+
     } catch (erro) {
-            console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
-            } 
+        console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
+    }
 
 }
 
@@ -65,21 +78,34 @@ async function deletarProduto(id) {
 
     if (!confirmarExclusao) {
         window.alert("Produto não será excluido!")
-        return 
+        return
+    }
+
+    const token = exigirAutenticacao()
+
+    if (!token) {
+        return
     }
 
     try {
-    const resposta = await fetch(`https://localhost:7288/Produto/${id}`, {
-        method: 'DELETE'
-    })
+        const resposta = await fetch(`https://localhost:7288/Produto/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
 
-    if (resposta.ok) {
-        window.alert('Produto excluido com sucesso!')
+        if (tratarNaoAutorizado(resposta)) {
+            return
+        }
 
-        await listarProdutos()
-    } else {
-        window.alert('Não foi possível excluir produto')
-    }
+        if (resposta.ok) {
+            window.alert('Produto excluido com sucesso!')
+
+            await listarProdutos()
+        } else {
+            window.alert('Não foi possível excluir produto')
+        }
     } catch (erro) {
         console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
     }
