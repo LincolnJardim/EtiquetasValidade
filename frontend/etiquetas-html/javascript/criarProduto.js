@@ -28,15 +28,34 @@ function cadastrarProduto() {
         }
 
         // Bloco para captura dos valores dos inputs.
-        const nomeProduto = document.getElementById('iproduto').value
-        const diasValidade = document.getElementById('ivalidade').value
+        const nomeProduto = document.getElementById('iproduto').value.trim()
+
+        const inputDiasValidade =
+            document.getElementById('ivalidade')
+
+        const diasValidadeTexto =
+            inputDiasValidade.value.trim()
+
+        const diasValidade =
+            Number(diasValidadeTexto)
+
+        // Bloco para validações do formulário
+        const formularioValido = validarFormulario(
+            nomeProduto,
+            diasValidadeTexto,
+            diasValidade
+        )
+
+        if (!formularioValido) {
+            return
+        }
 
         // console.log(`O produto ${nomeProduto} tem a validade de ${diasValidade}`)
 
         // Montagem do objeto JavaScript que será convertido para JSON.
         const produtoJson = {
             nome: nomeProduto,
-            diasValidade: Number(diasValidade)
+            diasValidade: diasValidade
         }
 
         // Bloco para conexão com a rota da API e conversão do objeto JavaScript para JSON.
@@ -86,6 +105,76 @@ function cadastrarProduto() {
             )
         }
     })
+}
+
+// Função responsável por validar os dados informados no formulário.
+function validarFormulario(
+    nomeProduto,
+    diasValidadeTexto,
+    diasValidade
+) {
+    if (nomeProduto === '') {
+        mostrarMensagem(
+            'Informe o nome do produto.'
+        )
+
+        return false
+    }
+
+    if (nomeProduto.length < 2) {
+        mostrarMensagem(
+            'O nome do produto deve possuir pelo menos 2 caracteres.'
+        )
+
+        return false
+    }
+
+    if (nomeProduto.length > 100) {
+        mostrarMensagem(
+            'O nome do produto deve possuir no máximo 100 caracteres.'
+        )
+
+        return false
+    }
+
+    if (diasValidadeTexto === '') {
+        mostrarMensagem(
+            'Informe a validade do produto.'
+        )
+
+        return false
+    }
+
+    if (Number.isNaN(diasValidade)) {
+        mostrarMensagem(
+            'Informe uma validade válida.'
+        )
+
+        return false
+    }
+
+    if (!Number.isInteger(diasValidade)) {
+        mostrarMensagem(
+            'A validade deve ser informada em dias inteiros.'
+        )
+
+        return false
+    }
+
+    if (diasValidade <= 0) {
+        mostrarMensagem(
+            'A validade deve ser maior que zero.'
+        )
+
+        return false
+    }
+
+    return true
+}
+
+// Função responsável por apresentar uma mensagem de validação ao usuário.
+function mostrarMensagem(mensagem) {
+    window.alert(mensagem)
 }
 
 /*

@@ -40,9 +40,10 @@
 
             <form id="icadastro">
                 <label for="iproduto">Nome do Produto</label>
-                <input type="text" name="produto" id="iproduto" placeholder="Ex: Parmegiana de frango">
+                <input type="text" name="produto" id="iproduto" placeholder="Ex: Parmegiana de frango" required minlength="5" maxlength="100">
+
                 <label for="ivalidade">Validade do Produto</label>
-                <input type="number" name="validade" id="ivalidade" placeholder="Ex: 3">
+                <input type="number" name="validade" id="ivalidade" placeholder="Ex: 3" required min="1" step="1">
                 <button type="submit">Cadastrar</button>
             </form>
 
