@@ -5,7 +5,7 @@ function obterToken() {
 function encerrarSessao() {
     sessionStorage.removeItem('tokenEtiquetaExpress')
 
-    window.location.href = 'login.html'
+    window.location.replace('login.html')
 }
 
 function exigirAutenticacao() {

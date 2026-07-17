@@ -111,6 +111,10 @@ button {
     cursor: pointer;
 }
 
+#botao-sair {
+    
+}
+
 h3 {
     background-color: var(--cor-destaque);
     padding: 15px;
