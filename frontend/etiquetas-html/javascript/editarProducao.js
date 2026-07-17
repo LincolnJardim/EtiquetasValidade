@@ -1,128 +1,282 @@
-// Manipulação do DOM para esperar a página HTML carregar por completo antes de chamar a função cadastrarProduto()
+// Manipulação do DOM para esperar a página HTML carregar por completo antes de iniciar a edição da produção.
 document.addEventListener('DOMContentLoaded', async function () {
-    await carregarProdutos()
-    editarProducao()
+    const token = exigirAutenticacao()
+
+    // Interrompe a execução caso não exista uma sessão autenticada.
+    if (!token) {
+        return
+    }
+
+    // Aguarda o carregamento dos produtos e armazena o resultado da operação.
+    const produtosCarregados = await carregarProdutos()
+
+    // Impede que a página continue caso os produtos não tenham sido carregados.
+    if (!produtosCarregados) {
+        return
+    }
+
+    await editarProducao()
 })
 
+
+// Função responsável por buscar os produtos cadastrados na API e preencher o campo de seleção.
 async function carregarProdutos() {
-    const dropdownProdutos = document.getElementById('idrop-produto')
+    const dropdownProdutos =
+        document.getElementById('idrop-produto')
+
+    const token = exigirAutenticacao()
+
+    // Interrompe o carregamento caso a sessão não exista mais.
+    if (!token) {
+        return false
+    }
 
     try {
-        const resposta = await fetch('https://localhost:7288/Produto/listarProdutosCadastrados',
+        const resposta = await fetch(
+            'https://localhost:7288/Produto/listarProdutosCadastrados',
             {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             }
         )
 
-        if (resposta.ok) {
-            let listaProdutos = await resposta.json()
-
-
-
-            for (let produto of listaProdutos) {
-
-                let item = document.createElement('option')
-                item.text = `${produto.nome} (${produto.diasValidade} dias)`
-                item.value = produto.id
-
-
-                dropdownProdutos.appendChild(item)
-
-            }
+        // Verifica se a API retornou 401 por token ausente, inválido ou expirado.
+        if (tratarNaoAutorizado(resposta)) {
+            return false
         }
+
+        // Impede a continuação caso a API não consiga carregar os produtos.
+        if (!resposta.ok) {
+            window.alert(
+                'Não foi possível carregar os produtos disponíveis.'
+            )
+
+            return false
+        }
+
+        const listaProdutos = await resposta.json()
+
+        // Impede a continuação quando nenhum produto for encontrado.
+        if (listaProdutos.length === 0) {
+            window.alert(
+                'Nenhum produto cadastrado foi encontrado.'
+            )
+
+            return false
+        }
+
+        // Percorre a lista de produtos recebida e adiciona cada produto ao campo select.
+        for (const produto of listaProdutos) {
+            const item = document.createElement('option')
+
+            item.text =
+                `${produto.nome} (${produto.diasValidade} dias)`
+
+            item.value = produto.id
+
+            dropdownProdutos.appendChild(item)
+        }
+
+        // Informa que os produtos foram carregados corretamente.
+        return true
     } catch (erro) {
-        console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
+        console.error(
+            'Erro de rede: a API pode estar desligada ou fora do ar.',
+            erro
+        )
+
+        window.alert(
+            'Não foi possível conectar ao sistema para carregar os produtos.'
+        )
+
+        return false
     }
 }
 
+
+// Função responsável por carregar os dados da produção e enviar as alterações para a API.
 async function editarProducao() {
-    const parametros = new URLSearchParams(window.location.search)
+    const parametros =
+        new URLSearchParams(window.location.search)
 
     const idUrl = parametros.get('id')
 
-    if (idUrl === null) {
-        window.alert('Producao inválida. Voltando para a lista')
-        window.location.href = 'listaProducoes.html'
-    } else {
+    const token = exigirAutenticacao()
 
-        try {
-            const resposta = await fetch(`https://localhost:7288/Producao/obterProducaoPorId${idUrl}`, {
-                method: 'GET'
+    // Interrompe a execução caso não exista uma sessão autenticada.
+    if (!token) {
+        return
+    }
+
+    // Impede a edição quando o identificador da produção não foi informado ou é inválido.
+    if (!idUrl || Number.isNaN(Number(idUrl))) {
+        window.alert(
+            'Produção inválida. Voltando para a lista.'
+        )
+
+        window.location.href = 'listaProducoes.html'
+
+        return
+    }
+
+    try {
+        // Busca os dados da produção que será editada.
+        const resposta = await fetch(
+            `https://localhost:7288/Producao/obterProducaoPorId${idUrl}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             }
+        )
+
+        // Verifica se a API retornou 401 por token ausente, inválido ou expirado.
+        if (tratarNaoAutorizado(resposta)) {
+            return
+        }
+
+        // Impede que o formulário de edição seja liberado quando a produção não for carregada.
+        if (!resposta.ok) {
+            window.alert(
+                'Não foi possível carregar a produção.'
             )
 
-            if (resposta.ok) {
-                let producaoBanco = await resposta.json()
+            window.location.href = 'listaProducoes.html'
 
-                const dataFabricacaoFormatada = producaoBanco.dataFabricacao.split('T')[0]
+            return
+        }
 
-                console.log(producaoBanco)
+        const producaoBanco = await resposta.json()
 
-                let nomeProduto = document.getElementById('idrop-produto')
-                let dataFabricacao = document.getElementById('idatafabricacao')
-                let etiquetas = document.getElementById('ietiquetas')
+        // Remove as informações de horário recebidas da API para preencher o input do tipo date.
+        const dataFabricacaoFormatada =
+            producaoBanco.dataFabricacao.split('T')[0]
 
-                nomeProduto.value = producaoBanco.produto.id
-                nomeProduto.disabled = true
-                dataFabricacao.value = `${dataFabricacaoFormatada}`
-                etiquetas.value = `${producaoBanco.quantidadeEtiquetas}`
-            }
+        // Captura dos campos do formulário.
+        const dropdownProduto =
+            document.getElementById('idrop-produto')
 
-            const formulario = document.getElementById('icadastro')
+        const inputDataFabricacao =
+            document.getElementById('idatafabricacao')
 
-            formulario.addEventListener('submit', async function (evento) {
+        const inputQuantidadeEtiquetas =
+            document.getElementById('ietiquetas')
 
+        // Preenche os campos com os dados da produção recebidos da API.
+        dropdownProduto.value = producaoBanco.produto.id
+
+        /*
+            O produto não pode ser alterado durante a edição da produção,
+            por isso o campo permanece desabilitado.
+        */
+        dropdownProduto.disabled = true
+
+        inputDataFabricacao.value = dataFabricacaoFormatada
+
+        inputQuantidadeEtiquetas.value =
+            producaoBanco.quantidadeEtiquetas
+
+        const formulario =
+            document.getElementById('icadastro')
+
+        // Criação do evento submit e função assíncrona com alteração no comportamento padrão de recarregar a página.
+        formulario.addEventListener(
+            'submit',
+            async function (evento) {
                 evento.preventDefault()
 
-                let nomeProduto = document.getElementById('idrop-produto').text
-                let dataFabricacao = document.getElementById('idatafabricacao').value
-                let etiquetas = document.getElementById('ietiquetas').value
+                // Verifica novamente a autenticação no momento do envio do formulário.
+                const tokenAtual = exigirAutenticacao()
 
-                // Montagem do objeto Json.
-                let producaoJson = {
+                // Interrompe a execução caso a sessão não exista mais.
+                if (!tokenAtual) {
+                    return
+                }
+
+                // Captura o nome do produto selecionado para apresentar na mensagem de sucesso.
+                const nomeProduto =
+                    dropdownProduto.options[
+                        dropdownProduto.selectedIndex
+                    ].text
+
+                // Bloco para captura dos valores dos campos que podem ser alterados.
+                const dataFabricacao =
+                    inputDataFabricacao.value
+
+                const quantidadeEtiquetas =
+                    inputQuantidadeEtiquetas.value
+
+                // Montagem do objeto JavaScript que será convertido para JSON.
+                const producaoJson = {
                     id: Number(idUrl),
                     dataFabricacao: dataFabricacao,
-                    quantidadeEtiquetas: Number(etiquetas)
+                    quantidadeEtiquetas:
+                        Number(quantidadeEtiquetas)
                 }
 
                 try {
-                    const resposta = await fetch(`https://localhost:7288/Producao/atualizarProducao${idUrl}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(producaoJson)
-                    })
+                    // Envia os dados atualizados da produção para a API.
+                    const respostaAtualizacao = await fetch(
+                        `https://localhost:7288/Producao/atualizarProducao${idUrl}`,
+                        {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization':
+                                    `Bearer ${tokenAtual}`
+                            },
+                            body: JSON.stringify(producaoJson)
+                        }
+                    )
 
-                    if (resposta.ok) {
-                        window.alert(`A produção ${nomeProduto} foi atualizada com sucesso.`)
-
-                        window.location.href = 'listaProducoes.html'
-                    } else {
-                        window.alert('O servidor C# recebeu, mas retornou um erro.')
+                    // Verifica se a API retornou 401 por token ausente, inválido ou expirado.
+                    if (
+                        tratarNaoAutorizado(
+                            respostaAtualizacao
+                        )
+                    ) {
+                        return
                     }
 
+                    // Impede a continuação caso a API não consiga atualizar a produção.
+                    if (!respostaAtualizacao.ok) {
+                        window.alert(
+                            'O servidor recebeu a solicitação, mas não conseguiu atualizar a produção.'
+                        )
+
+                        return
+                    }
+
+                    // A execução somente chega aqui quando a produção foi atualizada com sucesso.
+                    window.alert(
+                        `A produção ${nomeProduto} foi atualizada com sucesso.`
+                    )
+
+                    window.location.href =
+                        'listaProducoes.html'
                 } catch (erro) {
-                    console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
+                    console.error(
+                        'Erro de rede: a API pode estar desligada ou fora do ar.',
+                        erro
+                    )
+
+                    window.alert(
+                        'Não foi possível conectar ao sistema para atualizar a produção.'
+                    )
                 }
+            }
+        )
+    } catch (erro) {
+        console.error(
+            'Erro de rede: a API pode estar desligada ou fora do ar.',
+            erro
+        )
 
-            })
-
-        } catch (erro) {
-            console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
-        }
+        window.alert(
+            'Não foi possível conectar ao sistema para carregar a produção.'
+        )
     }
-
-}
-
-function formatarData(dataApi) {
-    let data = new Date(dataApi)
-
-    let ano = data.getFullYear()
-    let mes = String(data.getMonth() + 1).padStart(2, '0')
-    let dia = String(data.getDate()).padStart(2, '0')
-
-    let dataFormatada = `${dia}/${mes}/${ano}`
-
-    return dataFormatada
 }

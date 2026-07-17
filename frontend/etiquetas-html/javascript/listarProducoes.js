@@ -1,119 +1,260 @@
+// Manipulação do DOM para esperar a página HTML carregar por completo antes de iniciar a listagem das produções.
 document.addEventListener('DOMContentLoaded', function () {
+    const token = exigirAutenticacao()
+
+    // Interrompe a execução caso não exista uma sessão autenticada.
+    if (!token) {
+        return
+    }
+
     listarProducao()
 })
 
+
+// Função responsável por buscar as produções cadastradas na API e preencher a tabela.
 async function listarProducao() {
     const tabela = document.querySelector('#itabela tbody')
 
+    // Limpa a tabela antes de adicionar os registros retornados pela API.
     tabela.innerHTML = ''
 
-    try {
-        const resposta = await fetch('https://localhost:7288/Producao/listarProducoesCadastradas', {
-            method: 'GET'
-        })
+    const token = exigirAutenticacao()
 
-        if (resposta.ok) {
-            let listaProducao = await resposta.json()
-
-            for (let posicao = 0; posicao < listaProducao.length; posicao++) {
-
-                const dataFabricacao = formatarData(listaProducao[posicao].dataFabricacao)
-
-                const dataValidade = formatarData(listaProducao[posicao].dataValidade)
-
-                let linha = document.createElement('tr')
-
-                linha.innerHTML = `
-                <td>${listaProducao[posicao].id}</td>
-                <td>${listaProducao[posicao].produto.nome}</td>
-                <td>${dataFabricacao}</td>
-                <td>${dataValidade}</td>
-                <td>${listaProducao[posicao].quantidadeEtiquetas}</td>
-                <td>
-                    <button class="btn-editar"      data-producao-id="${listaProducao[posicao].id}">Editar</button>  
-
-                    <button class="btn-excluir" data-producao-id="${listaProducao[posicao].id}">Excluir</button>
-
-                    <button class="btn-etiqueta" data-producao-id="${listaProducao[posicao].id}">Gerar Etiqueta</button>
-                
-                </td>
-                `
-
-                const botaoEditar = linha.querySelector('.btn-editar')
-                const botaoExcluir = linha.querySelector('.btn-excluir')
-                const botaoEtiqueta = linha.querySelector('.btn-etiqueta')
-
-                botaoEditar.addEventListener('click', function (evento) {
-                    const elementoClicado = evento.target
-
-                    const idProducao = elementoClicado.dataset.producaoId
-
-
-                    window.location.href = `editarProducao.html?id=${idProducao}`
-                })
-
-
-                botaoExcluir.addEventListener('click', function (evento) {
-
-                    const elementoClicado = evento.target
-
-                    const idProducao = elementoClicado.dataset.producaoId
-
-                    deletarProducao(idProducao)
-                })
-
-                botaoEtiqueta.addEventListener('click', function (evento) {
-
-                    const elementoClicado = evento.target
-
-                    const idProducao = elementoClicado.dataset.producaoId
-
-                    window.location.href = `gerarEtiqueta.html?id=${idProducao}`
-                })
-
-
-                tabela.appendChild(linha)
-            }
-        }
-    } catch (erro) {
-        console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
-    }
-}
-
-async function deletarProducao(id) {
-    let confirmarExclusao = window.confirm('Você deseja excluir essa produção? Essa ação é permanente')
-
-    if (!confirmarExclusao) {
-        window.alert("Produção não será excluido!")
+    // Interrompe a execução caso não exista uma sessão autenticada.
+    if (!token) {
         return
     }
 
     try {
-        const resposta = await fetch(`https://localhost:7288/producao/${id}`,
+        const resposta = await fetch(
+            'https://localhost:7288/Producao/listarProducoesCadastradas',
             {
-                method: "DELETE"
-            })
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
 
-        if (resposta.ok) {
-            window.alert('Produção excluida com sucesso!')
+        // Verifica se a API retornou 401 por token ausente, inválido ou expirado.
+        if (tratarNaoAutorizado(resposta)) {
+            return
+        }
 
-            await listarProducao()
-        } else {
-            window.alert('Não foi possível excluir produção')
+        // Impede a continuação caso a API não consiga carregar as produções.
+        if (!resposta.ok) {
+            window.alert(
+                'Não foi possível carregar as produções cadastradas.'
+            )
+
+            return
+        }
+
+        const listaProducao = await resposta.json()
+
+        // Exibe uma mensagem dentro da tabela quando nenhuma produção estiver cadastrada.
+        if (listaProducao.length === 0) {
+            const linha = document.createElement('tr')
+
+            linha.innerHTML = `
+                <td colspan="6">
+                    Nenhuma produção cadastrada.
+                </td>
+            `
+
+            tabela.appendChild(linha)
+
+            return
+        }
+
+        // Percorre a lista retornada pela API e cria uma linha para cada produção.
+        for (const producao of listaProducao) {
+            const dataFabricacao =
+                formatarData(producao.dataFabricacao)
+
+            const dataValidade =
+                formatarData(producao.dataValidade)
+
+            const linha = document.createElement('tr')
+
+            linha.innerHTML = `
+                <td>${producao.id}</td>
+
+                <td>${producao.produto.nome}</td>
+
+                <td>${dataFabricacao}</td>
+
+                <td>${dataValidade}</td>
+
+                <td>${producao.quantidadeEtiquetas}</td>
+
+                <td>
+                    <button
+                        class="btn-editar"
+                        data-producao-id="${producao.id}"
+                    >
+                        Editar
+                    </button>
+
+                    <button
+                        class="btn-excluir"
+                        data-producao-id="${producao.id}"
+                    >
+                        Excluir
+                    </button>
+
+                    <button
+                        class="btn-etiqueta"
+                        data-producao-id="${producao.id}"
+                    >
+                        Gerar Etiqueta
+                    </button>
+                </td>
+            `
+
+            const botaoEditar =
+                linha.querySelector('.btn-editar')
+
+            const botaoExcluir =
+                linha.querySelector('.btn-excluir')
+
+            const botaoEtiqueta =
+                linha.querySelector('.btn-etiqueta')
+
+            // Evento responsável por redirecionar o usuário para a página de edição.
+            botaoEditar.addEventListener(
+                'click',
+                function (evento) {
+                    /*
+                        currentTarget representa o botão em que
+                        o evento foi registrado.
+                    */
+                    const elementoClicado = evento.currentTarget
+
+                    const idProducao =
+                        elementoClicado.dataset.producaoId
+
+                    window.location.href =
+                        `editarProducao.html?id=${idProducao}`
+                }
+            )
+
+            // Evento responsável por solicitar a exclusão da produção.
+            botaoExcluir.addEventListener(
+                'click',
+                function (evento) {
+                    const elementoClicado = evento.currentTarget
+
+                    const idProducao =
+                        elementoClicado.dataset.producaoId
+
+                    deletarProducao(idProducao)
+                }
+            )
+
+            // Evento responsável por redirecionar para a geração das etiquetas.
+            botaoEtiqueta.addEventListener(
+                'click',
+                function (evento) {
+                    const elementoClicado = evento.currentTarget
+
+                    const idProducao =
+                        elementoClicado.dataset.producaoId
+
+                    window.location.href =
+                        `gerarEtiqueta.html?id=${idProducao}`
+                }
+            )
+
+            tabela.appendChild(linha)
         }
     } catch (erro) {
-        console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
+        console.error(
+            'Erro de rede: a API pode estar desligada ou fora do ar.',
+            erro
+        )
+
+        window.alert(
+            'Não foi possível conectar ao sistema para carregar as produções.'
+        )
     }
 }
 
+
+// Função responsável por excluir uma produção pelo identificador recebido.
+async function deletarProducao(id) {
+    const token = exigirAutenticacao()
+
+    // Interrompe a execução caso não exista uma sessão autenticada.
+    if (!token) {
+        return
+    }
+
+    const confirmarExclusao = window.confirm(
+        'Você deseja excluir essa produção? Essa ação é permanente.'
+    )
+
+    // Interrompe a exclusão caso o usuário não confirme a operação.
+    if (!confirmarExclusao) {
+        window.alert('A produção não será excluída.')
+
+        return
+    }
+
+    try {
+        const resposta = await fetch(
+            `https://localhost:7288/Producao/${id}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+
+        // Verifica se a API retornou 401 por token ausente, inválido ou expirado.
+        if (tratarNaoAutorizado(resposta)) {
+            return
+        }
+
+        // Impede a continuação caso a API não consiga excluir a produção.
+        if (!resposta.ok) {
+            window.alert(
+                'Não foi possível excluir a produção.'
+            )
+
+            return
+        }
+
+        // A execução somente chega aqui quando a produção foi excluída com sucesso.
+        window.alert(
+            'Produção excluída com sucesso!'
+        )
+
+        // Atualiza a tabela sem precisar recarregar a página inteira.
+        await listarProducao()
+    } catch (erro) {
+        console.error(
+            'Erro de rede: a API pode estar desligada ou fora do ar.',
+            erro
+        )
+
+        window.alert(
+            'Não foi possível conectar ao sistema para excluir a produção.'
+        )
+    }
+}
+
+
+// Função responsável por converter a data recebida da API para o formato brasileiro.
 function formatarData(dataApi) {
-    let data = new Date(dataApi)
+    const data = new Date(dataApi)
 
-    let ano = data.getFullYear()
-    let mes = String(data.getMonth() + 1).padStart(2, '0')
-    let dia = String(data.getDate()).padStart(2, '0')
+    const ano = data.getFullYear()
+    const mes = String(data.getMonth() + 1).padStart(2, '0')
+    const dia = String(data.getDate()).padStart(2, '0')
 
-    let dataFormatada = `${dia}/${mes}/${ano}`
+    const dataFormatada = `${dia}/${mes}/${ano}`
 
     return dataFormatada
 }
