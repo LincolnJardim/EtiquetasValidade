@@ -103,6 +103,8 @@ async function editarProducao() {
 
     const idUrl = parametros.get('id')
 
+    const idProducao = Number(idUrl)
+
     const token = exigirAutenticacao()
 
     // Interrompe a execução caso não exista uma sessão autenticada.
@@ -111,12 +113,18 @@ async function editarProducao() {
     }
 
     // Impede a edição quando o identificador da produção não foi informado ou é inválido.
-    if (!idUrl || Number.isNaN(Number(idUrl))) {
+    if (
+        !idUrl ||
+        Number.isNaN(idProducao) ||
+        !Number.isInteger(idProducao) ||
+        idProducao <= 0
+    ) {
         window.alert(
             'Produção inválida. Voltando para a lista.'
         )
 
-        window.location.href = 'listaProducoes.html'
+        window.location.href =
+            'listaProducoes.html'
 
         return
     }
@@ -144,18 +152,20 @@ async function editarProducao() {
                 'Não foi possível carregar a produção.'
             )
 
-            window.location.href = 'listaProducoes.html'
+            window.location.href =
+                'listaProducoes.html'
 
             return
         }
 
-        const producaoBanco = await resposta.json()
+        const producaoBanco =
+            await resposta.json()
 
         // Remove as informações de horário recebidas da API para preencher o input do tipo date.
         const dataFabricacaoFormatada =
             producaoBanco.dataFabricacao.split('T')[0]
 
-        // Captura dos campos do formulário.
+        // Captura dos elementos do formulário.
         const dropdownProduto =
             document.getElementById('idrop-produto')
 
@@ -165,8 +175,24 @@ async function editarProducao() {
         const inputQuantidadeEtiquetas =
             document.getElementById('ietiquetas')
 
+        const formulario =
+            document.getElementById('icadastro')
+
         // Preenche os campos com os dados da produção recebidos da API.
-        dropdownProduto.value = producaoBanco.produto.id
+        dropdownProduto.value =
+            producaoBanco.produto.id
+
+        // Impede a continuação caso o produto relacionado à produção não tenha sido encontrado.
+        if (dropdownProduto.selectedIndex === -1) {
+            window.alert(
+                'O produto relacionado a esta produção não foi encontrado.'
+            )
+
+            window.location.href =
+                'listaProducoes.html'
+
+            return
+        }
 
         /*
             O produto não pode ser alterado durante a edição da produção,
@@ -174,13 +200,15 @@ async function editarProducao() {
         */
         dropdownProduto.disabled = true
 
-        inputDataFabricacao.value = dataFabricacaoFormatada
+        inputDataFabricacao.value =
+            dataFabricacaoFormatada
+
+        // Impede a seleção de uma data futura no campo.
+        inputDataFabricacao.max =
+            obterDataAtualFormatada()
 
         inputQuantidadeEtiquetas.value =
             producaoBanco.quantidadeEtiquetas
-
-        const formulario =
-            document.getElementById('icadastro')
 
         // Criação do evento submit e função assíncrona com alteração no comportamento padrão de recarregar a página.
         formulario.addEventListener(
@@ -189,10 +217,42 @@ async function editarProducao() {
                 evento.preventDefault()
 
                 // Verifica novamente a autenticação no momento do envio do formulário.
-                const tokenAtual = exigirAutenticacao()
+                const tokenAtual =
+                    exigirAutenticacao()
 
                 // Interrompe a execução caso a sessão não exista mais.
                 if (!tokenAtual) {
+                    return
+                }
+
+                // Captura dos valores informados no formulário.
+                const produtoIdTexto =
+                    dropdownProduto.value
+
+                const produtoId =
+                    Number(produtoIdTexto)
+
+                const dataFabricacao =
+                    inputDataFabricacao.value
+
+                const quantidadeEtiquetasTexto =
+                    inputQuantidadeEtiquetas.value.trim()
+
+                const quantidadeEtiquetas =
+                    Number(quantidadeEtiquetasTexto)
+
+                // Valida os dados antes de montar o objeto e enviar para a API.
+                const formularioValido =
+                    validarFormularioProducao(
+                        produtoIdTexto,
+                        produtoId,
+                        dataFabricacao,
+                        quantidadeEtiquetasTexto,
+                        quantidadeEtiquetas
+                    )
+
+                // Interrompe a atualização quando algum campo for inválido.
+                if (!formularioValido) {
                     return
                 }
 
@@ -202,35 +262,30 @@ async function editarProducao() {
                         dropdownProduto.selectedIndex
                     ].text
 
-                // Bloco para captura dos valores dos campos que podem ser alterados.
-                const dataFabricacao =
-                    inputDataFabricacao.value
-
-                const quantidadeEtiquetas =
-                    inputQuantidadeEtiquetas.value
-
                 // Montagem do objeto JavaScript que será convertido para JSON.
                 const producaoJson = {
-                    id: Number(idUrl),
+                    id: idProducao,
                     dataFabricacao: dataFabricacao,
-                    quantidadeEtiquetas:
-                        Number(quantidadeEtiquetas)
+                    quantidadeEtiquetas: quantidadeEtiquetas
                 }
 
                 try {
                     // Envia os dados atualizados da produção para a API.
-                    const respostaAtualizacao = await fetch(
-                        `https://localhost:7288/Producao/atualizarProducao${idUrl}`,
-                        {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization':
-                                    `Bearer ${tokenAtual}`
-                            },
-                            body: JSON.stringify(producaoJson)
-                        }
-                    )
+                    const respostaAtualizacao =
+                        await fetch(
+                            `https://localhost:7288/Producao/atualizarProducao${idUrl}`,
+                            {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization':
+                                        `Bearer ${tokenAtual}`
+                                },
+                                body: JSON.stringify(
+                                    producaoJson
+                                )
+                            }
+                        )
 
                     // Verifica se a API retornou 401 por token ausente, inválido ou expirado.
                     if (

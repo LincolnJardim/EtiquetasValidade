@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="estilos/criarproducao_media-query.css">
     <title>Cadastrar Produção</title>
 </head>
+
 <body>
     <header class="cabecalho">
 
@@ -28,7 +30,7 @@
                 </li>
             </ul>
         </nav>
-        
+
     </header>
 
 
@@ -39,7 +41,7 @@
             <form id="icadastro">
 
                 <label for="drop-produto">Produto</label>
-                <select name="produção" id="idrop-produto" >
+                <select name="produção" id="idrop-produto">
                     <option value="" disabled selected>Selecione um produto</option>
                 </select>
 
@@ -47,7 +49,7 @@
                 <input type="date" name="datafabricacao" id="idatafabricacao">
 
                 <label for="ietiquetas">Quantidade de Etiquetas</label>
-                <input type="number" name="etiquetas" id="ietiquetas">
+                <input type="number" name="quantidadeEtiquetas" id="ietiquetas" required min="1" step="1">
 
                 <button type="submit">Cadastrar</button>
             </form>
@@ -61,7 +63,9 @@
     </footer>
 
     <script src="javascript/autenticacao.js"></script>
+    <script src="javascript/validacaoProducao.js"></script>
     <script src="javascript/logout.js"></script>
     <script src="javascript/criarProducao.js"></script>
 </body>
+
 </html>
