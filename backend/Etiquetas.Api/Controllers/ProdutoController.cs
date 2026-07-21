@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Etiquetas.Application.Services;
 using Etiquetas.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
+using Etiquetas.Application.DTOs;
+using Etiquetas.Application.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Etiquetas.Api.Controllers
 {
@@ -23,50 +28,113 @@ namespace Etiquetas.Api.Controllers
             _service = service;
         }
 
+
+        // Endpoint responsável por criar um novo produto.
         [HttpPost]
-        public IActionResult Criar(CriarProdutoDto produtoDto)
+        public IActionResult Criar(
+            [FromBody] CriarProdutoDto produtoDto
+        )
         {
-            var novoProduto = _service.CriarProduto(produtoDto);
-            return Ok(novoProduto);
+            try
+            {
+                var novoProduto =
+                    _service.CriarProduto(produtoDto);
+
+                return CreatedAtAction(
+                    nameof(ObterPorId),
+                    new { id = novoProduto.Id },
+                    novoProduto
+                );
+            }
+            catch (ValidationException erro)
+            {
+                return BadRequest(new
+                {
+                    mensagem = erro.Message
+                });
+            }
         }
 
+
+        // Endpoint responsável por listar os produtos cadastrados.
         [HttpGet("listarProdutosCadastrados")]
         public IActionResult ListarTodos()
         {
-            var listaProdutos = _service.ListarTodos();
+            var listaProdutos =
+                _service.ListarTodos();
 
             return Ok(listaProdutos);
         }
 
-        [HttpGet("obterProdutoPorId{id}")]
+
+        // Endpoint responsável por buscar um produto pelo identificador.
+        [HttpGet("obterProdutoPorId{id:int}")]
         public IActionResult ObterPorId(int id)
         {
-            var produto = _service.ObterPorId(id);
+            var produto =
+                _service.ObterPorId(id);
 
             if (produto == null)
-                return NotFound();
+            {
+                return NotFound(new
+                {
+                    mensagem = "Produto não encontrado."
+                });
+            }
 
             return Ok(produto);
         }
- 
-        [HttpPut("atualizarProduto{id}")]
-        public IActionResult AtualizarProduto(AtualizarProdutoDto atualizarProdutoDto)
+
+
+        // Endpoint responsável por atualizar um produto existente.
+        [HttpPut("atualizarProduto{id:int}")]
+        public IActionResult AtualizarProduto(
+            int id,
+            [FromBody] AtualizarProdutoDto atualizarProdutoDto
+        )
         {
-            var produtoAtualizado = _service.AtualizarProduto(atualizarProdutoDto);
+            try
+            {
+                var produtoAtualizado =
+                    _service.AtualizarProduto(
+                        id,
+                        atualizarProdutoDto
+                    );
 
-            if (atualizarProdutoDto == null)
-                return NotFound();
+                if (produtoAtualizado == null)
+                {
+                    return NotFound(new
+                    {
+                        mensagem = "Produto não encontrado."
+                    });
+                }
 
-            return Ok(produtoAtualizado);
+                return Ok(produtoAtualizado);
+            }
+            catch (ValidationException erro)
+            {
+                return BadRequest(new
+                {
+                    mensagem = erro.Message
+                });
+            }
         }
 
-        [HttpDelete("{id}")]
+
+        // Endpoint responsável por excluir um produto existente.
+        [HttpDelete("{id:int}")]
         public IActionResult DeletarProduto(int id)
         {
-            var produtoBanco = _service.DeletarProduto(id);
+            var produtoExcluido =
+                _service.DeletarProduto(id);
 
-            if (produtoBanco == null)
-                return NotFound();
+            if (!produtoExcluido)
+            {
+                return NotFound(new
+                {
+                    mensagem = "Produto não encontrado."
+                });
+            }
 
             return NoContent();
         }

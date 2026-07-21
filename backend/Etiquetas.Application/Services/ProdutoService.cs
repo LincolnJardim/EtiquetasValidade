@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Etiquetas.Application.DTOs;
 using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
-
-
+using System.ComponentModel.DataAnnotations;
+using Etiquetas.Application.DTOs;
+using Etiquetas.Application.Interfaces;
+using Etiquetas.Domain.Entities;
 
 namespace Etiquetas.Application.Services
 {
@@ -19,17 +21,18 @@ namespace Etiquetas.Application.Services
             _repository = repository;
         }
 
+
+        // Função responsável por validar e criar um novo produto.
         public Produto CriarProduto(CriarProdutoDto produtoDto)
         {
-            if (string.IsNullOrEmpty(produtoDto.Nome))
-                throw new Exception("Nome obrigatório");
+            var nomeNormalizado =
+                ValidarENormalizarNome(produtoDto.Nome);
 
-            if (produtoDto.DiasValidade <= 0)
-                throw new Exception("Validade inválida");
-            
+            ValidarDiasValidade(produtoDto.DiasValidade);
+
             var novoProduto = new Produto
             {
-                Nome = produtoDto.Nome,
+                Nome = nomeNormalizado,
                 DiasValidade = produtoDto.DiasValidade
             };
 
@@ -38,41 +41,118 @@ namespace Etiquetas.Application.Services
             return novoProduto;
         }
 
+
+        // Função responsável por buscar um produto pelo identificador.
         public Produto? ObterPorId(int id)
         {
             return _repository.ObterPorId(id);
         }
 
+
+        // Função responsável por listar todos os produtos cadastrados.
         public List<Produto> ListarTodos()
         {
             return _repository.ListarTodos();
         }
 
-        public Produto AtualizarProduto(AtualizarProdutoDto atualizarProdutoDto)
-        {
-            var produtoBanco = _repository.ObterPorId(atualizarProdutoDto.id);
 
+        // Função responsável por atualizar um produto existente.
+        public Produto? AtualizarProduto(
+            int id,
+            AtualizarProdutoDto atualizarProdutoDto
+        )
+        {
+            var produtoBanco =
+                _repository.ObterPorId(id);
+
+            // Retorna null para o Controller responder com 404.
             if (produtoBanco == null)
-                throw new Exception("Produto não encontrado");
-            
-            produtoBanco.Nome = atualizarProdutoDto.Nome;
-            produtoBanco.DiasValidade = atualizarProdutoDto.DiasValidade;
+            {
+                return null;
+            }
+
+            var nomeNormalizado =
+                ValidarENormalizarNome(
+                    atualizarProdutoDto.Nome
+                );
+
+            ValidarDiasValidade(
+                atualizarProdutoDto.DiasValidade
+            );
+
+            produtoBanco.Nome = nomeNormalizado;
+
+            produtoBanco.DiasValidade =
+                atualizarProdutoDto.DiasValidade;
 
             _repository.AtualizarProduto(produtoBanco);
 
             return produtoBanco;
         }
 
-        public Produto DeletarProduto(int id)
-        {
-            var produtoBanco = _repository.ObterPorId(id);
 
+        // Função responsável por excluir um produto existente.
+        public bool DeletarProduto(int id)
+        {
+            var produtoBanco =
+                _repository.ObterPorId(id);
+
+            // Retorna false para o Controller responder com 404.
             if (produtoBanco == null)
-                throw new Exception("Produto não encontrado");
-            
+            {
+                return false;
+            }
+
             _repository.DeletarProduto(produtoBanco);
 
-            return produtoBanco;
+            return true;
+        }
+
+
+        // Função responsável por normalizar e validar o nome do produto.
+        private static string ValidarENormalizarNome(
+            string nome
+        )
+        {
+            var nomeNormalizado =
+                nome?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(nomeNormalizado))
+            {
+                throw new ValidationException(
+                    "Informe o nome do produto."
+                );
+            }
+
+            if (nomeNormalizado.Length < 2)
+            {
+                throw new ValidationException(
+                    "O nome do produto deve possuir pelo menos 2 caracteres."
+                );
+            }
+
+            if (nomeNormalizado.Length > 100)
+            {
+                throw new ValidationException(
+                    "O nome do produto deve possuir no máximo 100 caracteres."
+                );
+            }
+
+            return nomeNormalizado;
+        }
+
+
+        // Função responsável por validar os dias de validade.
+        private static void ValidarDiasValidade(
+            int diasValidade
+        )
+        {
+            if (diasValidade <= 0)
+            {
+                throw new ValidationException(
+                    "A validade deve ser maior que zero."
+                );
+            }
         }
     }
 }

@@ -120,7 +120,6 @@ async function editarProduto() {
 
                 // Montagem do objeto JavaScript que será convertido para JSON.
                 const produtoJson = {
-                    id: Number(idUrl),
                     nome: nomeProduto,
                     diasValidade: diasValidade
                 }
