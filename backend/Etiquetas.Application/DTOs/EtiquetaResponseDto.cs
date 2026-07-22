@@ -7,7 +7,8 @@ namespace Etiquetas.Application.DTOs
 {
     public class EtiquetaResponseDto
     {
-        public string NomeProduto { get; set; }
+        public string NomeProduto { get; set; } =
+            string.Empty;
 
         public DateTime DataProducao { get; set; }
 

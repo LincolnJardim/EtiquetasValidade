@@ -264,7 +264,6 @@ async function editarProducao() {
 
                 // Montagem do objeto JavaScript que será convertido para JSON.
                 const producaoJson = {
-                    id: idProducao,
                     dataFabricacao: dataFabricacao,
                     quantidadeEtiquetas: quantidadeEtiquetas
                 }

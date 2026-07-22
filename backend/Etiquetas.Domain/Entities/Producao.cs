@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace Etiquetas.Domain.Entities
 {
     public class Producao
     {
         public int Id { get; set; }
 
-        public Produto Produto { get; set; }
+        public Produto Produto { get; set; } = null!;
 
         public DateTime DataFabricacao { get; set; }
 
@@ -17,9 +16,13 @@ namespace Etiquetas.Domain.Entities
 
         public int QuantidadeEtiquetas { get; set; }
 
+
         public void CalcularValidade()
         {
-            DataValidade = DataFabricacao.AddDays(Produto.DiasValidade);
+            DataValidade =
+                DataFabricacao.AddDays(
+                    Produto.DiasValidade
+                );
         }
     }
 }

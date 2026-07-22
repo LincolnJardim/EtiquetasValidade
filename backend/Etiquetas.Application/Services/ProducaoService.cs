@@ -5,123 +5,260 @@ using System.Threading.Tasks;
 using Etiquetas.Application.DTOs;
 using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using Etiquetas.Application.DTOs;
+using Etiquetas.Application.Interfaces;
+using Etiquetas.Domain.Entities;
 
 namespace Etiquetas.Application.Services
 {
     public class ProducaoService
     {
         private readonly IProducaoRepository _repository;
-        private readonly IProdutoRepository _produtoRepository;
+
+        private readonly IProdutoRepository
+            _produtoRepository;
 
 
         public ProducaoService(
-        IProducaoRepository repository,
-        IProdutoRepository produtoRepository)
+            IProducaoRepository repository,
+            IProdutoRepository produtoRepository
+        )
         {
             _repository = repository;
             _produtoRepository = produtoRepository;
         }
 
-        public Producao CriarProducao(CriarProducaoDto criarProducaoDto)
+
+        // Função responsável por validar e criar uma nova produção.
+        public Producao CriarProducao(
+            CriarProducaoDto criarProducaoDto
+        )
         {
+            ValidarProdutoId(
+                criarProducaoDto.ProdutoId
+            );
 
-            
-            if (criarProducaoDto.DataFabricacao > DateTime.Now)
-                throw new Exception("Data de fabricação não pode ser no futuro");
-            
-            if (criarProducaoDto.DataFabricacao < DateTime.Now.AddYears(-1))
-                throw new Exception("Data de fabricação muito antiga");
+            var dataFabricacao =
+                ValidarDataFabricacao(
+                    criarProducaoDto.DataFabricacao
+                );
 
-            if (criarProducaoDto.DataFabricacao == default)
-                throw new Exception("Data de fabricação inválida");
-            
-            var produto = _produtoRepository.ObterPorId(criarProducaoDto.ProdutoId);
+            ValidarQuantidadeEtiquetas(
+                criarProducaoDto.QuantidadeEtiquetas
+            );
+
+            var produto =
+                _produtoRepository.ObterPorId(
+                    criarProducaoDto.ProdutoId
+                );
 
             if (produto == null)
-                throw new Exception("Produto não encontrado");
-            
-            if (criarProducaoDto.QuantidadeEtiquetas <= 0)
-                throw new Exception("Quantidade inválida");
-            
+            {
+                throw new KeyNotFoundException(
+                    "Produto não encontrado."
+                );
+            }
+
             var producao = new Producao
             {
                 Produto = produto,
-                DataFabricacao = criarProducaoDto.DataFabricacao,
-                QuantidadeEtiquetas = criarProducaoDto.QuantidadeEtiquetas
+
+                DataFabricacao =
+                    dataFabricacao,
+
+                QuantidadeEtiquetas =
+                    criarProducaoDto
+                        .QuantidadeEtiquetas
             };
 
             producao.CalcularValidade();
-            
+
             _repository.AdicionarProducao(producao);
 
             return producao;
         }
 
-        public Producao ObterProduçoesPorId(int id)
+
+        // Função responsável por buscar uma produção pelo identificador.
+        public Producao? ObterProducaoPorId(int id)
         {
             return _repository.ObterProducaoPorId(id);
         }
 
+
+        // Função responsável por listar as produções cadastradas.
         public List<Producao> ListarProducoes()
         {
             return _repository.ListarProducoes();
         }
 
-        public Producao AtualizarProducao(AtualizarProducaoDto atualizarProducaoDto)
+
+        // Função responsável por atualizar uma produção existente.
+        public Producao? AtualizarProducao(
+            int id,
+            AtualizarProducaoDto atualizarProducaoDto
+        )
         {
-            var producaoBanco = _repository.ObterProducaoPorId(atualizarProducaoDto.Id);
+            var producaoBanco =
+                _repository.ObterProducaoPorId(id);
 
             if (producaoBanco == null)
-                throw new Exception("Produção não encontrado");
-            
-            producaoBanco.DataFabricacao = atualizarProducaoDto.DataFabricacao;
-            producaoBanco.QuantidadeEtiquetas = atualizarProducaoDto.QuantidadeEtiquetas;
+            {
+                return null;
+            }
+
+            var dataFabricacao =
+                ValidarDataFabricacao(
+                    atualizarProducaoDto
+                        .DataFabricacao
+                );
+
+            ValidarQuantidadeEtiquetas(
+                atualizarProducaoDto
+                    .QuantidadeEtiquetas
+            );
+
+            producaoBanco.DataFabricacao =
+                dataFabricacao;
+
+            producaoBanco.QuantidadeEtiquetas =
+                atualizarProducaoDto
+                    .QuantidadeEtiquetas;
 
             producaoBanco.CalcularValidade();
 
-            _repository.AtualizarProducao(producaoBanco);
+            _repository.AtualizarProducao(
+                producaoBanco
+            );
 
             return producaoBanco;
         }
 
-        public Producao DeletarProducao(int id)
+
+        // Função responsável por excluir uma produção existente.
+        public bool DeletarProducao(int id)
         {
-            var producaoBanco = _repository.ObterProducaoPorId(id);
+            var producaoBanco =
+                _repository.ObterProducaoPorId(id);
 
             if (producaoBanco == null)
-                throw new Exception("Produto não encontrado");
-            
-            _repository.DeletarProducao(producaoBanco);
-
-            return producaoBanco;
-        }
-
-        public List<EtiquetaResponseDto> GerarEtiqueta(int id)
-        {
-            var producaoBanco = _repository.ObterProducaoPorId(id);
-
-            if (producaoBanco == null)
-                throw new Exception("Produção não encontrado");
-
-            int gerarQuantidade = producaoBanco.QuantidadeEtiquetas;
-
-            List<EtiquetaResponseDto> etiquetasgeradas = new List<EtiquetaResponseDto>();
-
-            for (int contador = 0; contador < gerarQuantidade; contador++)
             {
-                var etiqueta = new EtiquetaResponseDto
-                {
-                    NomeProduto = producaoBanco.Produto.Nome,
-
-                    DataProducao = producaoBanco.DataFabricacao,
-
-                    DataValidade = producaoBanco.DataValidade
-                };
-
-                etiquetasgeradas.Add(etiqueta);
+                return false;
             }
-        
-            return etiquetasgeradas;
+
+            _repository.DeletarProducao(
+                producaoBanco
+            );
+
+            return true;
+        }
+
+
+        // Função responsável por gerar as etiquetas relacionadas a uma produção.
+        public List<EtiquetaResponseDto>?
+            GerarEtiqueta(int id)
+        {
+            var producaoBanco =
+                _repository.ObterProducaoPorId(id);
+
+            if (producaoBanco == null)
+            {
+                return null;
+            }
+
+            var etiquetasGeradas =
+                new List<EtiquetaResponseDto>();
+
+            for (
+                var contador = 0;
+                contador <
+                    producaoBanco.QuantidadeEtiquetas;
+                contador++
+            )
+            {
+                var etiqueta =
+                    new EtiquetaResponseDto
+                    {
+                        NomeProduto =
+                            producaoBanco
+                                .Produto
+                                .Nome,
+
+                        DataProducao =
+                            producaoBanco
+                                .DataFabricacao,
+
+                        DataValidade =
+                            producaoBanco
+                                .DataValidade
+                    };
+
+                etiquetasGeradas.Add(etiqueta);
+            }
+
+            return etiquetasGeradas;
+        }
+
+
+        // Função responsável por validar o identificador do produto.
+        private static void ValidarProdutoId(
+            int produtoId
+        )
+        {
+            if (produtoId <= 0)
+            {
+                throw new ValidationException(
+                    "Selecione um produto válido."
+                );
+            }
+        }
+
+
+        // Função responsável por validar e normalizar a data de fabricação.
+        private static DateTime
+            ValidarDataFabricacao(
+                DateTime? dataFabricacao
+            )
+        {
+            if (!dataFabricacao.HasValue)
+            {
+                throw new ValidationException(
+                    "Informe a data de fabricação."
+                );
+            }
+
+            /*
+                Remove eventuais informações de horário,
+                pois a regra da produção trabalha somente
+                com a data.
+            */
+            var dataNormalizada =
+                dataFabricacao.Value.Date;
+
+            if (dataNormalizada > DateTime.Today)
+            {
+                throw new ValidationException(
+                    "A data de fabricação não pode ser futura."
+                );
+            }
+
+            return dataNormalizada;
+        }
+
+
+        // Função responsável por validar a quantidade de etiquetas.
+        private static void
+            ValidarQuantidadeEtiquetas(
+                int quantidadeEtiquetas
+            )
+        {
+            if (quantidadeEtiquetas <= 0)
+            {
+                throw new ValidationException(
+                    "A quantidade de etiquetas deve ser maior que zero."
+                );
+            }
         }
     }
 }
