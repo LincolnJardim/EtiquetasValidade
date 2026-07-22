@@ -66,11 +66,10 @@ async function carregarEtiquetas(token) {
 
         // Impede a continuação caso a API não consiga gerar as etiquetas.
         if (!resposta.ok) {
-            window.alert(
-                'Não foi possível gerar as etiquetas desta produção.'
+            await mostrarErroDaApi(
+                resposta,
+                'Não foi possível gerar as etiquetas.'
             )
-
-            window.location.href = 'listaProducoes.html'
 
             return false
         }

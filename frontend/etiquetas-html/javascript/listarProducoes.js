@@ -43,10 +43,12 @@ async function listarProducao() {
 
         // Impede a continuação caso a API não consiga carregar as produções.
         if (!resposta.ok) {
-            window.alert(
-                'Não foi possível carregar as produções cadastradas.'
+            await mostrarErroDaApi(
+                resposta,
+                'Não foi possível carregar a produção.'
             )
 
+            window.location.href = 'listaProducoes.html'
             return
         }
 
@@ -219,7 +221,8 @@ async function deletarProducao(id) {
 
         // Impede a continuação caso a API não consiga excluir a produção.
         if (!resposta.ok) {
-            window.alert(
+            await mostrarErroDaApi(
+                resposta,
                 'Não foi possível excluir a produção.'
             )
 

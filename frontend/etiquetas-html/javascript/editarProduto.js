@@ -150,8 +150,9 @@ async function editarProduto() {
 
                     // Impede a continuação caso a API não consiga atualizar o produto.
                     if (!respostaAtualizacao.ok) {
-                        window.alert(
-                            'O servidor recebeu a solicitação, mas não conseguiu atualizar o produto.'
+                        await mostrarErroDaApi(
+                            respostaAtualizacao,
+                            'Não foi possível atualizar o produto.'
                         )
 
                         return

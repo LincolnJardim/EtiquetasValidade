@@ -25,7 +25,17 @@ async function listarProdutos() {
             return
         }
 
-        if (resposta.ok) {
+        if (!resposta.ok) {
+            await mostrarErroDaApi(
+                resposta,
+                'Não foi possível carregar o produto.'
+            )
+
+            window.location.href = 'lista_produtos.html'
+            return
+
+            window.location.href = 'listaProducoes.html'
+            return
             let produtos = await resposta.json()
             let tamanho = produtos.length
             console.log(produtos)
@@ -99,10 +109,14 @@ async function deletarProduto(id) {
             return
         }
 
-        if (resposta.ok) {
-            window.alert('Produto excluido com sucesso!')
+        if (!resposta.ok) {
+            await mostrarErroDaApi(
+                resposta,
+                'Não foi possível excluir o produto.'
+            )
 
-            await listarProdutos()
+            return
+
         } else {
             window.alert('Não foi possível excluir produto')
         }

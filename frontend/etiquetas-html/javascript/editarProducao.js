@@ -297,8 +297,9 @@ async function editarProducao() {
 
                     // Impede a continuação caso a API não consiga atualizar a produção.
                     if (!respostaAtualizacao.ok) {
-                        window.alert(
-                            'O servidor recebeu a solicitação, mas não conseguiu atualizar a produção.'
+                        await mostrarErroDaApi(
+                            respostaAtualizacao,
+                            'Não foi possível atualizar a produção.'
                         )
 
                         return

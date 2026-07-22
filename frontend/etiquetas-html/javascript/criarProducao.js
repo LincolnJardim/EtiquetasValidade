@@ -207,8 +207,9 @@ function cadastrarProducao() {
 
                 // Interrompe a execução caso a API não consiga cadastrar a produção.
                 if (!resposta.ok) {
-                    window.alert(
-                        'O servidor recebeu a solicitação, mas não conseguiu cadastrar a produção.'
+                    await mostrarErroDaApi(
+                        resposta,
+                        'Não foi possível cadastrar a produção.'
                     )
 
                     return
