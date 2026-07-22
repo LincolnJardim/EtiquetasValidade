@@ -10,14 +10,16 @@ namespace Etiquetas.Application.Interfaces
     {
         void AdicionarProducao(Producao producao);
 
-        Producao? ObterProducaoPorId(int Id);
+        Producao? ObterProducaoPorId(int id);
 
         List<Producao> ListarProducoes();
+
+        bool ExisteProducaoParaProduto(
+            int produtoId
+        );
 
         void AtualizarProducao(Producao producao);
 
         void DeletarProducao(Producao producao);
-
-
     }
 }

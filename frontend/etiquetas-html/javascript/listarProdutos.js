@@ -1,114 +1,198 @@
+// Aguarda o carregamento completo da página antes de listar os produtos.
 document.addEventListener('DOMContentLoaded', function () {
     listarProdutos()
 })
 
-async function listarProdutos() {
-    const tabela = document.querySelector('#itabela tbody')
 
+// Função responsável por buscar os produtos na API e exibi-los na tabela.
+async function listarProdutos() {
+    const tabela =
+        document.querySelector('#itabela tbody')
+
+    // Limpa a tabela antes de carregar novamente os produtos.
     tabela.innerHTML = ''
 
     const token = exigirAutenticacao()
 
+    // Interrompe a execução caso não exista uma sessão autenticada.
     if (!token) {
         return
     }
 
     try {
-        const resposta = await fetch('https://localhost:7288/Produto/listarProdutosCadastrados', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        const resposta = await fetch(
+            'https://localhost:7288/Produto/listarProdutosCadastrados',
+            {
+                method: 'GET',
 
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+
+        // Verifica se o token está ausente, inválido ou expirado.
         if (tratarNaoAutorizado(resposta)) {
             return
         }
 
+        // Apresenta a mensagem retornada pela API caso a consulta falhe.
         if (!resposta.ok) {
             await mostrarErroDaApi(
                 resposta,
-                'Não foi possível carregar o produto.'
+                'Não foi possível carregar os produtos.'
             )
 
-            window.location.href = 'lista_produtos.html'
             return
-
-            window.location.href = 'listaProducoes.html'
-            return
-            let produtos = await resposta.json()
-            let tamanho = produtos.length
-            console.log(produtos)
-            for (let posição = 0; posição < tamanho; posição++) {
-
-                let linha = document.createElement('tr')
-
-                linha.innerHTML = `
-                    <td>${produtos[posição].id}</td>
-                    <td>${produtos[posição].nome}</td>
-                    <td>${produtos[posição].diasValidade}</td>
-                    <td>
-                        <button class="btn-editar" data-produto-id="${produtos[posição].id}">Editar</button>
-                        <button class="btn-excluir" data-produto-id="${produtos[posição].id}">Excluir</button>
-                    </td>
-                `
-                const botaoEditar = linha.querySelector('.btn-editar')
-                const botaoExcluir = linha.querySelector('.btn-excluir')
-
-                botaoEditar.addEventListener('click', function (evento) {
-                    const elementoClicado = evento.target
-
-                    const idProduto = elementoClicado.dataset.produtoId
-
-                    window.location.href = `editarProdutos.html?id=${idProduto}`
-                })
-
-
-                botaoExcluir.addEventListener('click', function (evento) {
-
-                    const elementoClicado = evento.target
-
-                    const idProduto = elementoClicado.dataset.produtoId
-
-                    deletarProduto(idProduto)
-                })
-
-                tabela.appendChild(linha)
-            }
         }
 
-    } catch (erro) {
-        console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
-    }
+        /*
+            Este bloco precisa ficar fora do if (!resposta.ok),
+            pois somente deve ser executado quando a resposta
+            da API for bem-sucedida.
+        */
+        const produtos = await resposta.json()
 
+        console.log(produtos)
+
+        // Exibe uma mensagem na tabela caso não existam produtos.
+        if (produtos.length === 0) {
+            const linha = document.createElement('tr')
+
+            linha.innerHTML = `
+                <td colspan="4">
+                    Nenhum produto cadastrado.
+                </td>
+            `
+
+            tabela.appendChild(linha)
+            return
+        }
+
+        // Percorre a lista retornada pela API e cria uma linha para cada produto.
+        for (
+            let posicao = 0;
+            posicao < produtos.length;
+            posicao++
+        ) {
+            const produto = produtos[posicao]
+
+            const linha =
+                document.createElement('tr')
+
+            linha.innerHTML = `
+                <td>${produto.id}</td>
+                <td>${produto.nome}</td>
+                <td>${produto.diasValidade}</td>
+                <td>
+                    <button
+                        class="btn-editar"
+                        data-produto-id="${produto.id}"
+                    >
+                        Editar
+                    </button>
+
+                    <button
+                        class="btn-excluir"
+                        data-produto-id="${produto.id}"
+                    >
+                        Excluir
+                    </button>
+                </td>
+            `
+
+            const botaoEditar =
+                linha.querySelector('.btn-editar')
+
+            const botaoExcluir =
+                linha.querySelector('.btn-excluir')
+
+
+            // Direciona o usuário para a página de edição do produto.
+            botaoEditar.addEventListener(
+                'click',
+                function (evento) {
+                    const elementoClicado =
+                        evento.currentTarget
+
+                    const idProduto =
+                        elementoClicado.dataset.produtoId
+
+                    window.location.href =
+                        `editarProdutos.html?id=${idProduto}`
+                }
+            )
+
+
+            // Solicita a exclusão do produto selecionado.
+            botaoExcluir.addEventListener(
+                'click',
+                function (evento) {
+                    const elementoClicado =
+                        evento.currentTarget
+
+                    const idProduto =
+                        elementoClicado.dataset.produtoId
+
+                    deletarProduto(idProduto)
+                }
+            )
+
+            tabela.appendChild(linha)
+        }
+    } catch (erro) {
+        console.error(
+            'Erro de rede: a API pode estar desligada ou fora do ar.',
+            erro
+        )
+
+        window.alert(
+            'Não foi possível conectar ao sistema para carregar os produtos.'
+        )
+    }
 }
 
-async function deletarProduto(id) {
-    let confirmarExclusao = window.confirm('Você deseja excluir esse produto? Essa ação é permanente')
 
+// Função responsável por excluir um produto.
+async function deletarProduto(id) {
+    const confirmarExclusao = window.confirm(
+        'Você deseja excluir este produto? Essa ação é permanente.'
+    )
+
+    // Interrompe a exclusão caso o usuário cancele a confirmação.
     if (!confirmarExclusao) {
-        window.alert("Produto não será excluido!")
+        window.alert(
+            'O produto não será excluído.'
+        )
+
         return
     }
 
     const token = exigirAutenticacao()
 
+    // Interrompe a execução caso não exista uma sessão autenticada.
     if (!token) {
         return
     }
 
     try {
-        const resposta = await fetch(`https://localhost:7288/Produto/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        const resposta = await fetch(
+            `https://localhost:7288/Produto/${id}`,
+            {
+                method: 'DELETE',
 
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+
+        // Verifica se o token está ausente, inválido ou expirado.
         if (tratarNaoAutorizado(resposta)) {
             return
         }
 
+        // Apresenta a mensagem retornada pela API caso a exclusão falhe.
         if (!resposta.ok) {
             await mostrarErroDaApi(
                 resposta,
@@ -116,17 +200,33 @@ async function deletarProduto(id) {
             )
 
             return
-
-        } else {
-            window.alert('Não foi possível excluir produto')
         }
+
+        // Este trecho somente será executado após uma exclusão bem-sucedida.
+        window.alert(
+            'Produto excluído com sucesso.'
+        )
+
+        /*
+            Atualiza a tabela sem precisar recarregar
+            completamente a página.
+        */
+        await listarProdutos()
     } catch (erro) {
-        console.error('Erro de rede: A API pode estar desligada ou fora do ar.', erro)
+        console.error(
+            'Erro de rede: a API pode estar desligada ou fora do ar.',
+            erro
+        )
+
+        window.alert(
+            'Não foi possível conectar ao sistema para excluir o produto.'
+        )
     }
 }
 
 
-/*function validarConexão() {
+/*
+function validarConexao() {
     window.alert('JavaScript conectado.')
 }
 */

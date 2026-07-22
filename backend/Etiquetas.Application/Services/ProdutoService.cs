@@ -6,9 +6,7 @@ using Etiquetas.Application.DTOs;
 using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
-using Etiquetas.Application.DTOs;
-using Etiquetas.Application.Interfaces;
-using Etiquetas.Domain.Entities;
+using Etiquetas.Application.Exceptions;
 
 namespace Etiquetas.Application.Services
 {
@@ -16,11 +14,20 @@ namespace Etiquetas.Application.Services
     {
         private readonly IProdutoRepository _repository;
 
-        public ProdutoService(IProdutoRepository repository)
+        private readonly IProducaoRepository
+            _producaoRepository;
+
+
+        public ProdutoService(
+            IProdutoRepository repository,
+            IProducaoRepository producaoRepository
+        )
         {
             _repository = repository;
-        }
 
+            _producaoRepository =
+                producaoRepository;
+        }
 
         // Função responsável por validar e criar um novo produto.
         public Produto CriarProduto(CriarProdutoDto produtoDto)
@@ -92,6 +99,7 @@ namespace Etiquetas.Application.Services
 
 
         // Função responsável por excluir um produto existente.
+        // Função responsável por excluir um produto existente.
         public bool DeletarProduto(int id)
         {
             var produtoBanco =
@@ -103,7 +111,24 @@ namespace Etiquetas.Application.Services
                 return false;
             }
 
-            _repository.DeletarProduto(produtoBanco);
+            /*
+                Impede que o produto seja excluído quando existem
+                produções relacionadas a ele.
+            */
+            var possuiProducoes =
+                _producaoRepository
+                    .ExisteProducaoParaProduto(id);
+
+            if (possuiProducoes)
+            {
+                throw new ConflitoException(
+                    "Não é possível excluir o produto porque existem produções vinculadas."
+                );
+            }
+
+            _repository.DeletarProduto(
+                produtoBanco
+            );
 
             return true;
         }

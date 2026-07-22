@@ -6,9 +6,7 @@ using Etiquetas.Application.DTOs;
 using Etiquetas.Application.Interfaces;
 using Etiquetas.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
-using Etiquetas.Application.DTOs;
-using Etiquetas.Application.Interfaces;
-using Etiquetas.Domain.Entities;
+
 
 namespace Etiquetas.Application.Services
 {
@@ -62,14 +60,16 @@ namespace Etiquetas.Application.Services
 
             var producao = new Producao
             {
+                ProdutoId = produto.Id,
+
                 Produto = produto,
 
                 DataFabricacao =
-                    dataFabricacao,
+        dataFabricacao,
 
                 QuantidadeEtiquetas =
-                    criarProducaoDto
-                        .QuantidadeEtiquetas
+        criarProducaoDto
+            .QuantidadeEtiquetas
             };
 
             producao.CalcularValidade();

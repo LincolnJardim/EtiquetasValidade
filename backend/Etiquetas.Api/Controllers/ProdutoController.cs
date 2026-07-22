@@ -4,12 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Etiquetas.Domain.Entities;
 using Etiquetas.Infrastructure.Data;
-using Microsoft.AspNetCore.Mvc;
-using Etiquetas.Application.Services;
-using Etiquetas.Application.DTOs;
-using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 using Etiquetas.Application.DTOs;
+using Etiquetas.Application.Exceptions;
 using Etiquetas.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -125,18 +122,29 @@ namespace Etiquetas.Api.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult DeletarProduto(int id)
         {
-            var produtoExcluido =
-                _service.DeletarProduto(id);
-
-            if (!produtoExcluido)
+            try
             {
-                return NotFound(new
+                var produtoExcluido =
+                    _service.DeletarProduto(id);
+
+                if (!produtoExcluido)
                 {
-                    mensagem = "Produto não encontrado."
+                    return NotFound(new
+                    {
+                        mensagem =
+                            "Produto não encontrado."
+                    });
+                }
+
+                return NoContent();
+            }
+            catch (ConflitoException erro)
+            {
+                return Conflict(new
+                {
+                    mensagem = erro.Message
                 });
             }
-
-            return NoContent();
         }
     }
 }
