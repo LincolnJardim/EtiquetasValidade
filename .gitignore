@@ -1,0 +1,73 @@
+# ============================================
+# .NET / Visual Studio
+# ============================================
+
+# Arquivos gerados durante compilação
+**/bin/
+**/obj/
+
+# Configurações e cache locais do Visual Studio
+.vs/
+**/.vs/
+
+# Arquivos específicos do usuário/IDE
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+
+# ============================================
+# Testes e cobertura
+# ============================================
+
+TestResults/
+**/TestResults/
+
+coverage/
+**/coverage/
+
+*.coverage
+*.coveragexml
+
+
+# ============================================
+# Logs e arquivos temporários
+# ============================================
+
+*.log
+*.tmp
+*.temp
+
+
+# ============================================
+# Variáveis de ambiente e configurações locais
+# ============================================
+
+.env
+.env.*
+
+# Permite manter um exemplo sem informações sensíveis
+!.env.example
+
+*.local.json
+
+
+# ============================================
+# Front-end / Node.js
+# ============================================
+
+node_modules/
+**/node_modules/
+
+dist/
+**/dist/
+
+
+# ============================================
+# Sistema operacional
+# ============================================
+
+.DS_Store
+Thumbs.db
+Desktop.ini
