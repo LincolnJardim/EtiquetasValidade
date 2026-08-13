@@ -1,90 +1,283 @@
-# 🏷️ Sistema de Etiquetas de Validade
+# Etiqueta Express
 
-> **Sistema automatizado para cadastro de produtos e emissão de etiquetas de validade em impressoras térmicas.**
+Sistema web para **gestão e impressão de etiquetas de validade**, desenvolvido para facilitar o controle de produtos e produções em estabelecimentos do setor alimentício.
 
-Um projeto full-stack focado na otimização de processos do setor alimentício. O sistema calcula automaticamente as datas de validade com base na data de fabricação e nas regras de cada produto, garantindo segurança sanitária e agilidade na cozinha. 
-
-Desenvolvido como parte do meu portfólio profissional de desenvolvimento backend, o projeto adota as melhores práticas de **Clean Architecture** e desenvolvimento em **C# / .NET**.
+O projeto nasceu a partir de uma necessidade observada em cozinhas profissionais e une minha experiência anterior na Gastronomia com minha formação atual em Ciência da Computação e desenvolvimento de software.
 
 ---
 
-## 🎯 Objetivo do Projeto
+## 🎯 Problema que o projeto resolve
 
-Desenvolver um software capaz de:
-- Cadastrar e gerenciar produtos e suas respectivas validades padrão.
-- Calcular automaticamente a data de vencimento a partir da data de fabricação.
-- Integrar-se com impressoras térmicas para emissão ágil de etiquetas.
-- Servir como uma base sólida e escalável de backend, com uma API REST pronta para consumo pelo frontend.
+Em cozinhas profissionais, o controle de validade de produtos depende frequentemente de processos manuais, como preenchimento de etiquetas à mão.
 
----
+Além de consumir tempo da equipe, esse processo pode gerar erros de preenchimento, inconsistências nas datas e dificuldades de padronização.
 
-## 🛠️ Tecnologias Utilizadas
-
-**Backend & Arquitetura**
-- **Linguagem:** C#
-- **Framework:** .NET / ASP.NET Core
-- **Arquitetura:** Clean Architecture
-- **API:** RESTful API
-
-**Banco de Dados & ORM**
-- **Banco de Dados:** SQL Server
-- **ORM:** Entity Framework (EF) Core
-
-**Frontend (Planejado)**
-- **Framework:** Angular
-
-**Ferramentas de Desenvolvimento**
-- Visual Studio / Visual Studio Code
-- CLI do .NET
-- Swagger (Testes de API)
+O **Etiqueta Express** busca simplificar esse fluxo permitindo que produtos e suas respectivas validades sejam cadastrados no sistema e utilizados para gerar etiquetas de forma padronizada.
 
 ---
 
-## 🏗️ Arquitetura do Projeto
+## 🚀 Funcionalidades
 
-O sistema foi desenhado sob os princípios da **Clean Architecture**, garantindo baixo acoplamento e alta coesão através da separação clara de responsabilidades:
+### Implementadas
 
+* 🔐 Autenticação de usuários com JWT
+* 🔒 Proteção de endpoints utilizando autorização
+* 👤 Cadastro técnico de usuários com armazenamento seguro de senha
+* 📦 Cadastro e gerenciamento de produtos
+* 📅 Cálculo automático da validade a partir da data de fabricação
+* 🗄️ Persistência de dados utilizando Entity Framework Core e SQL Server
+* 🌐 API REST desenvolvida com ASP.NET Core
+* 📖 Documentação e testes dos endpoints através do Swagger
+* 🔑 Suporte a Bearer Token no Swagger
+* 🖥️ Interface web utilizando HTML, CSS e JavaScript
+* 🔗 Integração do front-end com endpoints protegidos da API
+* 📱 Interface desenvolvida com abordagem mobile-first
+* 🖨️ Preparação da interface para impressão de etiquetas
 
+### Em desenvolvimento
 
-- `Etiquetas.Domain`: Coração do sistema, contendo as entidades principais e regras de negócio puras.
-- `Etiquetas.Application`: Orquestração do sistema, contendo serviços e casos de uso (Use Cases).
-- `Etiquetas.Infrastructure`: Camada de detalhes técnicos, responsável pelo acesso ao banco de dados (EF Core) e integrações externas.
-- `Etiquetas.Api`: Camada de apresentação e entrada da aplicação, expondo os endpoints via API REST.
-
----
-
-## 📦 Modelagem de Entidades
-
-A estrutura de dados foi pensada para atender múltiplos clientes (SaaS) com rastreabilidade:
-
-- **Empresa:** Representa o cliente que contrata e utiliza o sistema.
-- **Usuario:** Funcionário vinculado a uma `Empresa` específica, responsável pelas operações.
-- **Produto:** Item cadastrado com seu respectivo tempo de vida útil (dias de validade).
-- **Producao:** Registro de um lote fabricado, que gera as etiquetas finais com as datas calculadas.
-
----
-
-## 🧠 Regra de Negócio Principal
-
-O core lógico do sistema reside no cálculo seguro da validade sanitária. 
-
-**Exemplo Prático:**
-1. O usuário seleciona um produto cadastrado *(ex: Parmegiana de Carne)*.
-2. O sistema recupera a validade padrão *(ex: 3 dias)*.
-3. O usuário informa a data e hora de fabricação.
-4. O backend **calcula automaticamente** a data e hora exatas de descarte.
-5. O sistema gera a matriz de dados para a impressão da etiqueta térmica.
+* Fluxo completo de produção
+* Refinamentos na geração e impressão das etiquetas
+* Testes com impressora térmica real
+* Validações adicionais de campos e regras de negócio
+* Tratamento e padronização de erros
+* Testes automatizados
+* Deploy da aplicação para utilização piloto
 
 ---
 
-## ⚙️ Configuração e Execução
+## 🛠️ Tecnologias
+
+### Back-end
+
+* C#
+* .NET 10
+* ASP.NET Core Web API
+* Entity Framework Core
+* JWT Authentication
+* REST APIs
+
+### Banco de Dados
+
+* Microsoft SQL Server
+
+### Front-end
+
+* HTML5
+* CSS3
+* JavaScript
+
+### Ferramentas
+
+* Git
+* GitHub
+* Swagger / OpenAPI
+* Visual Studio / VS Code
+
+---
+
+## 🏗️ Arquitetura
+
+O back-end está organizado em camadas inspiradas nos princípios da **Clean Architecture**, buscando separar responsabilidades e facilitar a manutenção e evolução da aplicação.
+
+```text
+backend/
+│
+├── Etiquetas.Domain
+│   └── Entidades e regras de negócio
+│
+├── Etiquetas.Application
+│   └── Services, DTOs e interfaces
+│
+├── Etiquetas.Infrastructure
+│   └── Entity Framework Core, DbContext e repositórios
+│
+└── Etiquetas.Api
+    └── Controllers, autenticação e configuração da aplicação
+```
+
+### Domain
+
+Contém as entidades e regras diretamente relacionadas ao domínio da aplicação.
+
+Exemplos:
+
+* Produto
+* Produção
+* Usuário
+* Empresa
+
+### Application
+
+Responsável pela comunicação entre o domínio e as demais camadas.
+
+Contém elementos como:
+
+* Services
+* DTOs
+* Interfaces de repositórios
+* Serviços de autenticação
+
+### Infrastructure
+
+Responsável pelo acesso e persistência dos dados.
+
+Inclui:
+
+* Entity Framework Core
+* DbContext
+* Repositórios
+* Migrations
+* SQL Server
+
+### API
+
+Camada responsável por expor as funcionalidades da aplicação através de endpoints REST.
+
+Inclui:
+
+* Controllers
+* Injeção de dependência
+* Autenticação JWT
+* Autorização
+* Swagger / OpenAPI
+
+---
+
+## 📅 Regra de negócio — cálculo de validade
+
+Uma das principais regras do sistema é o cálculo automático da validade do produto.
+
+Cada produto possui uma quantidade de dias de validade cadastrada.
+
+Ao registrar uma produção, o sistema utiliza:
+
+```text
+Data de fabricação + Dias de validade do produto
+```
+
+### Exemplo
+
+```text
+Produto: Molho de tomate
+Dias de validade: 3 dias
+Data de fabricação: 10/08/2026
+
+Data de validade calculada: 13/08/2026
+```
+
+Dessa forma, o operador não precisa calcular manualmente a data antes de gerar a etiqueta.
+
+---
+
+## 📸 Screenshots
+
+> As imagens abaixo serão adicionadas conforme a evolução da interface.
+
+### Login
+
+<!--
+![Tela de Login](docs/images/login.png)
+-->
+
+### Produtos
+
+<!--
+![Listagem de Produtos](docs/images/produtos.png)
+-->
+
+### Produção
+
+<!--
+![Tela de Produção](docs/images/producao.png)
+-->
+
+### Etiqueta
+
+<!--
+![Etiqueta Gerada](docs/images/etiqueta.png)
+-->
+
+---
+
+## ▶️ Como executar o projeto
 
 ### Pré-requisitos
-- SDK do .NET 8 (ou superior)
-- SQL Server rodando localmente ou em container Docker
 
-### Passos para rodar a API
+Antes de executar o projeto, certifique-se de possuir:
 
-1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/SeuUsuario/sistema-etiquetas.git](https://github.com/SeuUsuario/sistema-etiquetas.git)
+* .NET 10 SDK
+* Microsoft SQL Server
+* Git
+
+### Clone o repositório
+
+```bash
+git clone https://github.com/LincolnJardim/EtiquetasValidade.git
+```
+
+Entre na pasta do back-end:
+
+```bash
+cd EtiquetasValidade/backend
+```
+
+Restaure as dependências:
+
+```bash
+dotnet restore
+```
+
+Configure sua conexão com o SQL Server conforme seu ambiente local.
+
+Depois, aplique as migrations do Entity Framework Core e execute a API.
+
+> As configurações sensíveis, como chaves utilizadas na autenticação JWT, não devem ser versionadas no repositório.
+
+---
+
+## 📌 Status do projeto
+
+🚧 **Em desenvolvimento**
+
+O projeto encontra-se atualmente na construção da primeira versão funcional, com foco na validação da solução em um ambiente real.
+
+A API já possui sua estrutura principal, autenticação e funcionalidades relacionadas ao gerenciamento de produtos, enquanto o front-end está sendo integrado progressivamente aos endpoints protegidos.
+
+---
+
+## 🗺️ Roadmap
+
+Entre as próximas etapas planejadas estão:
+
+* [ ] Finalizar o fluxo completo de produção
+* [ ] Realizar testes de impressão em impressora térmica
+* [ ] Refinar o layout específico para etiquetas
+* [ ] Implementar validações adicionais
+* [ ] Adicionar testes automatizados
+* [ ] Realizar o primeiro deploy
+* [ ] Disponibilizar a aplicação para um projeto piloto
+* [ ] Evoluir o front-end para Angular
+* [ ] Implementar perfis e níveis de acesso mais refinados
+* [ ] Avaliar evolução futura para arquitetura multiempresa / SaaS
+
+---
+
+## 💡 Origem do projeto
+
+Antes de iniciar minha trajetória na área de Tecnologia, trabalhei profissionalmente com Gastronomia.
+
+Durante essa experiência, tive contato direto com processos de controle de produção, armazenamento e identificação de alimentos.
+
+O **Etiqueta Express** surgiu da ideia de utilizar desenvolvimento de software para resolver um problema que conheci na prática, transformando uma necessidade do setor alimentício em um projeto real de tecnologia.
+
+---
+
+## 👨‍💻 Autor
+
+**Lincoln Jardim**
+
+Estudante de Ciência da Computação com foco em desenvolvimento Back-end utilizando C# e .NET.
+
+* GitHub: [LincolnJardim](https://github.com/LincolnJardim)
+* LinkedIn: [Lincoln Alves](https://www.linkedin.com/in/lincoln-alves-245857197/)
